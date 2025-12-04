@@ -114,14 +114,14 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// POST - Create a new course (Admin only)
+// POST - Create a new course (Admin or Instructor)
 export async function POST(req: NextRequest) {
   try {
     const user = await getCurrentUser();
     
-    if (!user || user.role !== "admin") {
+    if (!user || (user.role !== "admin" && user.role !== "instructor")) {
       return NextResponse.json(
-        { error: "Unauthorized" },
+        { error: "Unauthorized. Only instructors and admins can create courses." },
         { status: 401 }
       );
     }
