@@ -1,7 +1,6 @@
 import dotenv from "dotenv";
 dotenv.config({ path: ".env.local" });
 
-import bcrypt from "bcryptjs";
 import connectDB from "../src/lib/db";
 import User from "../src/models/User";
 import Course from "../src/models/Course";
@@ -18,13 +17,13 @@ async function seed() {
     await Enrollment.deleteMany({});
     console.log("Cleared existing data");
 
-    // Create users
-    const hashedPassword = await bcrypt.hash("password123", 10);
+    // Create users - password will be hashed by the User model's pre-save hook
+    const password = "Password123";
 
     await User.create({
       name: "Admin User",
       email: "admin@coursemaster.com",
-      password: hashedPassword,
+      password: password,
       role: "admin",
     });
     console.log("Created admin user");
@@ -32,7 +31,7 @@ async function seed() {
     const instructor1 = await User.create({
       name: "John Smith",
       email: "john@coursemaster.com",
-      password: hashedPassword,
+      password: password,
       role: "instructor",
       bio: "Senior Web Developer with 10+ years of experience",
     });
@@ -40,7 +39,7 @@ async function seed() {
     const instructor2 = await User.create({
       name: "Sarah Johnson",
       email: "sarah@coursemaster.com",
-      password: hashedPassword,
+      password: password,
       role: "instructor",
       bio: "Data Science expert and Machine Learning enthusiast",
     });
@@ -49,14 +48,14 @@ async function seed() {
     const student1 = await User.create({
       name: "Mike Wilson",
       email: "mike@example.com",
-      password: hashedPassword,
+      password: password,
       role: "student",
     });
 
     const student2 = await User.create({
       name: "Emily Brown",
       email: "emily@example.com",
-      password: hashedPassword,
+      password: password,
       role: "student",
     });
     console.log("Created student users");
@@ -692,11 +691,11 @@ async function seed() {
     console.log("\n✅ Database seeded successfully!");
     console.log("\n📧 Test Accounts:");
     console.log("─".repeat(50));
-    console.log("Admin:      admin@coursemaster.com / password123");
-    console.log("Instructor: john@coursemaster.com / password123");
-    console.log("Instructor: sarah@coursemaster.com / password123");
-    console.log("Student:    mike@example.com / password123");
-    console.log("Student:    emily@example.com / password123");
+    console.log("Admin:      admin@coursemaster.com / Password123");
+    console.log("Instructor: john@coursemaster.com / Password123");
+    console.log("Instructor: sarah@coursemaster.com / Password123");
+    console.log("Student:    mike@example.com / Password123");
+    console.log("Student:    emily@example.com / Password123");
     console.log("─".repeat(50));
 
     process.exit(0);
