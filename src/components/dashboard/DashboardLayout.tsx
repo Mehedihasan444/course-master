@@ -4,7 +4,7 @@ import { ReactNode, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Avatar, Button } from "@/components/ui";
+import { Avatar } from "@/components/ui";
 import {
   BookOpen,
   LayoutDashboard,

@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Avatar, Button } from "@/components/ui";
+import { Avatar } from "@/components/ui";
 import {
   LayoutDashboard,
   BookOpen,
@@ -32,17 +32,17 @@ interface AdminLayoutProps {
 const sidebarItems = [
   {
     title: "Dashboard",
-    href: "/admin",
+    href: "/admin/dashboard",
     icon: LayoutDashboard,
   },
   {
     title: "Users",
-    href: "/admin/users",
+    href: "/admin/dashboard/users",
     icon: Users,
   },
   {
     title: "Courses",
-    href: "/admin/courses",
+    href: "/admin/dashboard/courses",
     icon: BookOpen,
   },
   {
@@ -52,22 +52,22 @@ const sidebarItems = [
   },
   {
     title: "Transactions",
-    href: "/admin/transactions",
+    href: "/admin/dashboard/transactions",
     icon: DollarSign,
   },
   {
     title: "Analytics",
-    href: "/admin/analytics",
+    href: "/admin/dashboard/analytics",
     icon: BarChart3,
   },
   {
     title: "Reports",
-    href: "/admin/reports",
+    href: "/admin/dashboard/reports",
     icon: FileText,
   },
   {
     title: "Settings",
-    href: "/admin/settings",
+    href: "/admin/dashboard/settings",
     icon: Settings,
   },
 ];
@@ -114,7 +114,7 @@ export function AdminLayout({ children, user }: AdminLayoutProps) {
           {sidebarItems.map((item) => {
             const isActive =
               pathname === item.href ||
-              (item.href !== "/admin" && pathname.startsWith(item.href));
+              (item.href !== "/admin/dashboard" && pathname.startsWith(item.href));
 
             return (
               <Link
