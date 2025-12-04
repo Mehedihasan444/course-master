@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -14,6 +14,7 @@ import { login, clearError } from "@/store/slices/authSlice";
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const dispatch = useAppDispatch();
   const { isLoading, error } = useAppSelector((state) => state.auth);
   const [showPassword, setShowPassword] = useState(false);
@@ -36,8 +37,12 @@ export default function LoginPage() {
         description: `Logged in as ${result.name}`,
       });
       
-      // Redirect based on role
-      if (result.role === "admin") {
+      // Check for redirect URL in query params
+      const redirectUrl = searchParams.get("redirect");
+      
+      if (redirectUrl) {
+        router.push(redirectUrl);
+      } else if (result.role === "admin") {
         router.push("/admin/dashboard");
       } else {
         router.push("/dashboard");
