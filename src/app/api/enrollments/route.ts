@@ -4,6 +4,7 @@ import { connectDB } from "@/lib/db";
 import Course from "@/models/Course";
 import Enrollment from "@/models/Enrollment";
 import { getCurrentUser } from "@/lib/auth";
+import { sendEnrollmentEmail } from "@/lib/email";
 
 // POST - Enroll in a course
 export async function POST(req: NextRequest) {
@@ -96,6 +97,11 @@ export async function POST(req: NextRequest) {
         { $inc: { "batches.$.enrolledCount": 1 } }
       );
     }
+
+    // Send enrollment confirmation email (async, don't block enrollment)
+    sendEnrollmentEmail(user.email, user.name, course.title).catch((err) => {
+      console.error("Failed to send enrollment email:", err);
+    });
 
     return NextResponse.json(
       {

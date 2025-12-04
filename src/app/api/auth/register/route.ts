@@ -4,6 +4,7 @@ import User from "@/models/User";
 import { signToken, setAuthCookie } from "@/lib/auth";
 import { registerApiSchema } from "@/lib/validations";
 import { AUTH_CONFIG } from "@/lib/constants";
+import { sendWelcomeEmail } from "@/lib/email";
 
 export async function POST(req: NextRequest) {
   try {
@@ -43,6 +44,11 @@ export async function POST(req: NextRequest) {
       email,
       password,
       role,
+    });
+    
+    // Send welcome email (async, don't block registration)
+    sendWelcomeEmail(user.name, user.email).catch((err) => {
+      console.error("Failed to send welcome email:", err);
     });
     
     // Generate token
