@@ -7,13 +7,14 @@ interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   label?: string;
   error?: string;
   helperText?: string;
-  options: { value: string; label: string }[];
+  options?: { value: string; label: string }[];
   placeholder?: string;
+  children?: React.ReactNode;
 }
 
 const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
   (
-    { className, label, error, helperText, options, placeholder, id, ...props },
+    { className, label, error, helperText, options, placeholder, id, children, ...props },
     ref
   ) => {
     const selectId = id || React.useId();
@@ -45,11 +46,11 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
               {placeholder}
             </option>
           )}
-          {options.map((option) => (
+          {options ? options.map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}
             </option>
-          ))}
+          )) : children}
         </select>
         {error && (
           <p className="text-sm text-red-600 flex items-center gap-1">

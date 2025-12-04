@@ -3,6 +3,7 @@ import { connectDB } from "@/lib/db";
 import Enrollment from "@/models/Enrollment";
 import Course from "@/models/Course";
 import { getCurrentUser } from "@/lib/auth";
+import mongoose from "mongoose";
 
 export async function POST(
   request: NextRequest,
@@ -19,11 +20,11 @@ export async function POST(
     }
 
     const { id } = await params;
-    const { lessonId } = await request.json();
+    const { lessonId, moduleId } = await request.json();
 
-    if (!lessonId) {
+    if (!lessonId || !moduleId) {
       return NextResponse.json(
-        { success: false, error: "Lesson ID is required" },
+        { success: false, error: "Lesson ID and Module ID are required" },
         { status: 400 }
       );
     }
@@ -43,20 +44,6 @@ export async function POST(
       );
     }
 
-    // Check if lesson is already completed
-    const lessonIdStr = lessonId.toString();
-    const alreadyCompleted = enrollment.completedLessonIds.some(
-      (id: { toString: () => string }) => id.toString() === lessonIdStr
-    );
-
-    if (alreadyCompleted) {
-      return NextResponse.json({
-        success: true,
-        message: "Lesson already completed",
-        enrollment,
-      });
-    }
-
     // Get course to calculate total lessons
     const course = await Course.findById(enrollment.course);
     if (!course) {
@@ -66,24 +53,74 @@ export async function POST(
       );
     }
 
-    // Add lesson to completed list
-    enrollment.completedLessonIds.push(lessonId);
-    enrollment.completedLessons = enrollment.completedLessonIds.length;
+    // Find or create module progress
+    let moduleProgress = enrollment.progress.find(
+      (mp) => mp.moduleId.toString() === moduleId
+    );
+
+    if (!moduleProgress) {
+      enrollment.progress.push({
+        moduleId: new mongoose.Types.ObjectId(moduleId),
+        lessons: [],
+        completed: false,
+      });
+      moduleProgress = enrollment.progress[enrollment.progress.length - 1];
+    }
+
+    // Check if lesson is already completed
+    const existingLessonProgress = moduleProgress.lessons.find(
+      (lp) => lp.lessonId.toString() === lessonId
+    );
+
+    if (existingLessonProgress?.completed) {
+      return NextResponse.json({
+        success: true,
+        message: "Lesson already completed",
+        enrollment: {
+          completedLessons: enrollment.completedLessons,
+          totalLessons: enrollment.totalLessons,
+          overallProgress: enrollment.overallProgress,
+          isCompleted: enrollment.isCompleted,
+        },
+      });
+    }
+
+    // Update or create lesson progress
+    if (existingLessonProgress) {
+      existingLessonProgress.completed = true;
+      existingLessonProgress.completedAt = new Date();
+    } else {
+      moduleProgress.lessons.push({
+        lessonId: new mongoose.Types.ObjectId(lessonId),
+        completed: true,
+        watchedDuration: 0,
+        completedAt: new Date(),
+      });
+    }
+
+    // Count completed lessons across all modules
+    let completedCount = 0;
+    for (const mp of enrollment.progress) {
+      for (const lp of mp.lessons) {
+        if (lp.completed) {
+          completedCount++;
+        }
+      }
+    }
+
+    enrollment.completedLessons = completedCount;
     enrollment.totalLessons = course.totalLessons;
 
-    // Calculate progress
+    // Calculate overall progress
     enrollment.overallProgress = Math.round(
       (enrollment.completedLessons / enrollment.totalLessons) * 100
     );
 
     // Check if course is completed
-    if (enrollment.overallProgress === 100) {
+    if (enrollment.overallProgress >= 100) {
       enrollment.isCompleted = true;
       enrollment.completedAt = new Date();
     }
-
-    // Update last accessed
-    enrollment.lastAccessedAt = new Date();
 
     await enrollment.save();
 

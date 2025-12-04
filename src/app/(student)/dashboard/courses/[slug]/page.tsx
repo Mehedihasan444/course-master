@@ -119,7 +119,7 @@ export default async function CoursePlayerPage({
               </div>
               <Progress
                 value={enrollment.overallProgress}
-                size="md"
+                size="default"
                 variant={enrollment.isCompleted ? "success" : "default"}
                 className="bg-white/20"
               />
@@ -305,8 +305,8 @@ export default async function CoursePlayerPage({
               <div className="flex items-center gap-3">
                 <Avatar
                   src={course.instructorAvatar}
-                  name={course.instructorName}
-                  size="md"
+                  alt={course.instructorName}
+                  size="default"
                 />
                 <div>
                   <p className="text-sm text-surface-500">Instructor</p>

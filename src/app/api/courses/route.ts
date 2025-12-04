@@ -134,7 +134,7 @@ export async function POST(req: NextRequest) {
     const validationResult = courseSchema.safeParse(body);
     
     if (!validationResult.success) {
-      const errors = validationResult.error.errors.map((e) => e.message);
+      const errors = validationResult.error.issues.map((e) => e.message);
       return NextResponse.json(
         { error: errors[0] },
         { status: 400 }
@@ -144,11 +144,12 @@ export async function POST(req: NextRequest) {
     const courseData = validationResult.data;
     
     // Create course
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const course = await Course.create({
       ...courseData,
       instructor: user._id,
       instructorName: user.name,
-    });
+    } as any);
     
     return NextResponse.json(
       {

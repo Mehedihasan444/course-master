@@ -43,12 +43,18 @@ async function getEnrolledCourses(userId: string, searchParams: SearchParams) {
   // Filter by search
   if (searchParams.search) {
     const searchLower = searchParams.search.toLowerCase();
-    filtered = filtered.filter(
-      (e: { course: { title: string; instructorName: string; category: string } }) =>
-        e.course.title.toLowerCase().includes(searchLower) ||
-        e.course.instructorName.toLowerCase().includes(searchLower) ||
-        e.course.category.toLowerCase().includes(searchLower)
-    );
+    filtered = filtered.filter((e) => {
+      const course = e.course as unknown as { 
+        title: string; 
+        instructorName: string; 
+        category: string;
+      };
+      return (
+        course.title?.toLowerCase().includes(searchLower) ||
+        course.instructorName?.toLowerCase().includes(searchLower) ||
+        course.category?.toLowerCase().includes(searchLower)
+      );
+    });
   }
 
   return JSON.parse(JSON.stringify(filtered));
@@ -161,7 +167,7 @@ export default async function MyCoursesPage({
                       </Badge>
                     ) : enrollment.overallProgress > 0 ? (
                       <Badge
-                        variant="primary"
+                        variant="default"
                         className="absolute top-3 right-3"
                       >
                         In Progress

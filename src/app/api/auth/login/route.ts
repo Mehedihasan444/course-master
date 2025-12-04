@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
     const validationResult = loginSchema.safeParse(body);
     
     if (!validationResult.success) {
-      const errors = validationResult.error.errors.map((e) => e.message);
+      const errors = validationResult.error.issues.map((e) => e.message);
       return NextResponse.json(
         { error: errors[0] },
         { status: 400 }

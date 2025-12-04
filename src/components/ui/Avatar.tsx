@@ -7,22 +7,25 @@ interface AvatarProps extends React.HTMLAttributes<HTMLDivElement> {
   src?: string;
   alt?: string;
   fallback?: string;
-  size?: "sm" | "default" | "lg" | "xl";
+  name?: string;
+  size?: "sm" | "default" | "md" | "lg" | "xl";
 }
 
 const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(
-  ({ className, src, alt, fallback, size = "default", ...props }, ref) => {
+  ({ className, src, alt, fallback, name, size = "default", ...props }, ref) => {
     const [hasError, setHasError] = React.useState(false);
 
     const sizes = {
       sm: "h-8 w-8 text-xs",
       default: "h-10 w-10 text-sm",
+      md: "h-11 w-11 text-sm",
       lg: "h-12 w-12 text-base",
       xl: "h-16 w-16 text-lg",
     };
 
     const getFallbackText = () => {
       if (fallback) return fallback.slice(0, 2).toUpperCase();
+      if (name) return name.slice(0, 2).toUpperCase();
       if (alt) return alt.slice(0, 2).toUpperCase();
       return "U";
     };
