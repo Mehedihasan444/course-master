@@ -42,9 +42,10 @@ export default function LoginPage() {
       } else {
         router.push("/dashboard");
       }
-    } catch (err) {
+    } catch (err: unknown) {
+      const message = (err as { message?: string })?.message || "Please try again";
       toast.error("Login failed", {
-        description: err instanceof Error ? err.message : String(err),
+        description: message,
       });
     }
   };
