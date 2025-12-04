@@ -43,23 +43,30 @@ async function getCourses(searchParams: SearchParams) {
     query.category = searchParams.category;
   }
 
-  let courses = await Course.find(query)
-    .sort({ createdAt: -1 })
-    .populate("instructor", "name email")
-    .lean();
+  // Run all queries in parallel to prevent N+1 problem
+  const [courses, totalCourses, publishedCourses, draftCourses] = await Promise.all([
+    Course.find(query)
+      .sort({ createdAt: -1 })
+      .populate("instructor", "name email")
+      .lean(),
+    Course.countDocuments(),
+    Course.countDocuments({ isPublished: true }),
+    Course.countDocuments({ isPublished: false }),
+  ]);
 
-  // Filter by search
+  // Filter by search (in-memory)
+  let filteredCourses = courses;
   if (searchParams.search) {
     const searchLower = searchParams.search.toLowerCase();
-    courses = courses.filter(
+    filteredCourses = courses.filter(
       (c) =>
         c.title.toLowerCase().includes(searchLower) ||
         c.instructorName.toLowerCase().includes(searchLower)
     );
   }
 
-  // Get enrollment counts
-  const courseIds = courses.map((c) => c._id);
+  // Get enrollment counts using aggregation (single query for all courses)
+  const courseIds = filteredCourses.map((c) => c._id);
   const enrollmentCounts = await Enrollment.aggregate([
     { $match: { course: { $in: courseIds } } },
     { $group: { _id: "$course", count: { $sum: 1 } } },
@@ -68,13 +75,8 @@ async function getCourses(searchParams: SearchParams) {
     enrollmentCounts.map((e) => [e._id.toString(), e.count])
   );
 
-  // Stats
-  const totalCourses = await Course.countDocuments();
-  const publishedCourses = await Course.countDocuments({ isPublished: true });
-  const draftCourses = await Course.countDocuments({ isPublished: false });
-
   return {
-    courses: courses.map((course) => ({
+    courses: filteredCourses.map((course) => ({
       ...JSON.parse(JSON.stringify(course)),
       enrollmentCount: countMap.get(course._id.toString()) || 0,
     })),

@@ -79,6 +79,8 @@ const assignmentSubmissionSchema = new Schema<IAssignmentSubmission>(
 assignmentSubmissionSchema.index({ student: 1, course: 1 });
 assignmentSubmissionSchema.index({ course: 1, assignmentId: 1 });
 assignmentSubmissionSchema.index({ status: 1 });
+assignmentSubmissionSchema.index({ submittedAt: -1 }); // For sorting by submission date
+assignmentSubmissionSchema.index({ student: 1, assignmentId: 1 }, { unique: true }); // Prevent duplicate submissions
 
 // Quiz Attempt
 export interface IQuizAnswer {

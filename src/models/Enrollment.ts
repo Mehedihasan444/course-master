@@ -143,6 +143,9 @@ enrollmentSchema.index({ student: 1, course: 1 }, { unique: true });
 enrollmentSchema.index({ student: 1 });
 enrollmentSchema.index({ course: 1 });
 enrollmentSchema.index({ batch: 1 });
+enrollmentSchema.index({ isCompleted: 1 }); // For filtering by completion status
+enrollmentSchema.index({ enrolledAt: -1 }); // For sorting by enrollment date
+enrollmentSchema.index({ overallProgress: 1 }); // For progress filtering
 
 // Update progress calculation
 enrollmentSchema.methods.calculateProgress = function () {

@@ -42,19 +42,27 @@ export async function GET(request: NextRequest) {
       query.isCompleted = false;
     }
 
-    // Get enrollments with populated data
-    let enrollments = await Enrollment.find(query)
-      .populate("student", "name email avatar")
-      .populate("course", "title slug thumbnail category batches")
-      .sort({ enrolledAt: -1 })
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .lean();
+    // Run queries in parallel to prevent N+1 problem
+    const [enrollments, total, courses, totalEnrollments, activeEnrollments, completedEnrollments] = await Promise.all([
+      Enrollment.find(query)
+        .populate("student", "name email avatar")
+        .populate("course", "title slug thumbnail category batches")
+        .sort({ enrolledAt: -1 })
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .lean(),
+      Enrollment.countDocuments(query),
+      Course.find({}, "title slug batches").lean(),
+      Enrollment.countDocuments(),
+      Enrollment.countDocuments({ isCompleted: false }),
+      Enrollment.countDocuments({ isCompleted: true }),
+    ]);
 
-    // Filter by search if provided
+    // Filter by search if provided (in-memory filter after fetch)
+    let filteredEnrollments = enrollments;
     if (search) {
       const searchLower = search.toLowerCase();
-      enrollments = enrollments.filter((enrollment) => {
+      filteredEnrollments = enrollments.filter((enrollment) => {
         const student = enrollment.student as { name?: string; email?: string };
         const course = enrollment.course as { title?: string };
         return (
@@ -65,19 +73,8 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // Get total count
-    const total = await Enrollment.countDocuments(query);
-
-    // Get all courses for filter dropdown
-    const courses = await Course.find({}, "title slug batches").lean();
-
-    // Get stats
-    const totalEnrollments = await Enrollment.countDocuments();
-    const activeEnrollments = await Enrollment.countDocuments({ isCompleted: false });
-    const completedEnrollments = await Enrollment.countDocuments({ isCompleted: true });
-
     return NextResponse.json({
-      enrollments: JSON.parse(JSON.stringify(enrollments)),
+      enrollments: JSON.parse(JSON.stringify(filteredEnrollments)),
       courses: JSON.parse(JSON.stringify(courses)),
       pagination: {
         page,

@@ -3,6 +3,7 @@ import { connectDB } from "@/lib/db";
 import Course from "@/models/Course";
 import { getCurrentUser } from "@/lib/auth";
 import { courseSchema } from "@/lib/validations";
+import { cache } from "@/lib/cache";
 
 interface Params {
   params: Promise<{ slug: string }>;
@@ -80,6 +81,9 @@ export async function PUT(req: NextRequest, { params }: Params) {
       );
     }
     
+    // Invalidate course caches
+    cache.deletePattern("courses:");
+    
     return NextResponse.json({
       success: true,
       message: "Course updated successfully",
@@ -118,6 +122,9 @@ export async function DELETE(req: NextRequest, { params }: Params) {
         { status: 404 }
       );
     }
+    
+    // Invalidate course caches
+    cache.deletePattern("courses:");
     
     return NextResponse.json({
       success: true,

@@ -59,6 +59,8 @@ const userSchema = new Schema<IUser>(
 
 // Index for faster role lookup (email already indexed via unique: true)
 userSchema.index({ role: 1 });
+userSchema.index({ name: "text", email: "text" }); // Text search for admin user search
+userSchema.index({ createdAt: -1 }); // For sorting by newest
 
 // Hash password before saving
 userSchema.pre("save", async function () {

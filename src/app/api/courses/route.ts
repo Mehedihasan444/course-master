@@ -3,6 +3,7 @@ import { connectDB } from "@/lib/db";
 import Course from "@/models/Course";
 import { getCurrentUser } from "@/lib/auth";
 import { courseSchema, courseQuerySchema } from "@/lib/validations";
+import { cache, cacheKeys, cacheTTL } from "@/lib/cache";
 
 // GET - Fetch courses with filtering, pagination, and sorting
 export async function GET(req: NextRequest) {
@@ -90,6 +91,29 @@ export async function GET(req: NextRequest) {
     const limitNum = parseInt(limit);
     const skip = (pageNum - 1) * limitNum;
     
+    // Create cache key from query params
+    const cacheKey = cacheKeys.courseList({
+      page, limit, search, category, level, minPrice, maxPrice, tag, sort,
+      featured: featured.toString(),
+    });
+    
+    // Try to get from cache first (cache for 30 seconds)
+    const cachedResult = cache.get<{
+      courses: unknown[];
+      total: number;
+    }>(cacheKey);
+    
+    if (cachedResult) {
+      return NextResponse.json({
+        success: true,
+        courses: cachedResult.courses,
+        totalPages: Math.ceil(cachedResult.total / limitNum),
+        currentPage: pageNum,
+        total: cachedResult.total,
+        cached: true,
+      });
+    }
+    
     // Execute query
     const [courses, total] = await Promise.all([
       Course.find(query)
@@ -102,6 +126,9 @@ export async function GET(req: NextRequest) {
         .lean(),
       Course.countDocuments(query),
     ]);
+    
+    // Cache the result
+    cache.set(cacheKey, { courses, total }, cacheTTL.SHORT);
     
     return NextResponse.json({
       success: true,
@@ -155,6 +182,9 @@ export async function POST(req: NextRequest) {
       instructor: user._id,
       instructorName: user.name,
     } as any);
+    
+    // Invalidate course list cache
+    cache.deletePattern("courses:list:");
     
     return NextResponse.json(
       {

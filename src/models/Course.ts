@@ -215,6 +215,11 @@ courseSchema.index({ isPublished: 1 });
 courseSchema.index({ isFeatured: 1 });
 courseSchema.index({ instructor: 1 });
 courseSchema.index({ tags: 1 });
+courseSchema.index({ createdAt: -1 }); // For sorting by newest
+courseSchema.index({ enrolledCount: -1 }); // For popular courses
+courseSchema.index({ rating: -1 }); // For top rated courses
+courseSchema.index({ category: 1, isPublished: 1 }); // Compound index for category + published filter
+courseSchema.index({ level: 1, isPublished: 1 }); // Compound index for level + published filter
 
 // Generate slug before saving
 courseSchema.pre("save", function () {
