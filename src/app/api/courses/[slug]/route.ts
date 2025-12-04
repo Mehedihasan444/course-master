@@ -68,9 +68,20 @@ export async function PUT(req: NextRequest, { params }: Params) {
       );
     }
     
+    const updateData = validationResult.data;
+    
+    // Transform batch dates from strings to Date objects if batches are being updated
+    if (updateData.batches) {
+      updateData.batches = updateData.batches.map((batch) => ({
+        ...batch,
+        startDate: new Date(batch.startDate),
+        endDate: new Date(batch.endDate),
+      }));
+    }
+    
     const course = await Course.findOneAndUpdate(
       { slug },
-      { $set: validationResult.data },
+      { $set: updateData },
       { new: true, runValidators: true }
     );
     

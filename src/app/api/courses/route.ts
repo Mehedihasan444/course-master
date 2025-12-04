@@ -93,7 +93,15 @@ export async function GET(req: NextRequest) {
     
     // Create cache key from query params
     const cacheKey = cacheKeys.courseList({
-      page, limit, search, category, level, minPrice, maxPrice, tag, sort,
+      page: page || "1",
+      limit: limit || "12",
+      search: search || "",
+      category: category || "",
+      level: level || "",
+      minPrice: minPrice || "",
+      maxPrice: maxPrice || "",
+      tag: tag || "",
+      sort: sort || "newest",
       featured: featured.toString(),
     });
     
@@ -175,13 +183,20 @@ export async function POST(req: NextRequest) {
     
     const courseData = validationResult.data;
     
+    // Transform batch dates from strings to Date objects
+    const transformedBatches = courseData.batches?.map((batch) => ({
+      ...batch,
+      startDate: new Date(batch.startDate),
+      endDate: new Date(batch.endDate),
+    }));
+    
     // Create course
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const course = await Course.create({
       ...courseData,
+      batches: transformedBatches,
       instructor: user._id,
       instructorName: user.name,
-    } as any);
+    });
     
     // Invalidate course list cache
     cache.deletePattern("courses:list:");
