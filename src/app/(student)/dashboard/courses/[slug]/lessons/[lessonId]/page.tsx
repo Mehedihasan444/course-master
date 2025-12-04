@@ -40,6 +40,8 @@ async function getLessonData(slug: string, lessonId: string, userId: string) {
     duration: number;
     order: number;
     isFree: boolean;
+    type: "video" | "article" | "quiz";
+    content: string;
   }> = [];
 
   for (const courseModule of course.modules) {
@@ -52,6 +54,8 @@ async function getLessonData(slug: string, lessonId: string, userId: string) {
         duration: lesson.duration,
         order: lesson.order,
         isFree: lesson.isFree,
+        type: lesson.videoUrl ? "video" : "article",
+        content: lesson.description || "",
       });
     }
   }

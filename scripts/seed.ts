@@ -82,7 +82,7 @@ async function seed() {
               {
                 title: "Introduction to HTML",
                 description: "Learn what HTML is and how it works",
-                videoUrl: "https://example.com/video1",
+                videoUrl: "https://www.youtube.com/watch?v=qz0aGYrrlhU",
                 duration: 15,
                 order: 1,
                 isFree: true,
@@ -90,7 +90,7 @@ async function seed() {
               {
                 title: "HTML Elements and Tags",
                 description: "Understanding HTML elements and their usage",
-                videoUrl: "https://example.com/video2",
+                videoUrl: "https://www.youtube.com/watch?v=UB1O30fR-EE",
                 duration: 20,
                 order: 2,
                 isFree: true,
@@ -98,7 +98,7 @@ async function seed() {
               {
                 title: "Forms and Inputs",
                 description: "Creating interactive forms in HTML",
-                videoUrl: "https://example.com/video3",
+                videoUrl: "https://www.youtube.com/watch?v=fNcJuPIZ2WE",
                 duration: 25,
                 order: 3,
                 isFree: false,
@@ -113,7 +113,7 @@ async function seed() {
               {
                 title: "Introduction to CSS",
                 description: "Learn CSS basics and selectors",
-                videoUrl: "https://example.com/video4",
+                videoUrl: "https://www.youtube.com/watch?v=yfoY53QXEnI",
                 duration: 18,
                 order: 1,
                 isFree: false,
@@ -121,7 +121,7 @@ async function seed() {
               {
                 title: "CSS Box Model",
                 description: "Understanding margins, padding, and borders",
-                videoUrl: "https://example.com/video5",
+                videoUrl: "https://www.youtube.com/watch?v=1PnVor36_40",
                 duration: 22,
                 order: 2,
                 isFree: false,
@@ -129,7 +129,7 @@ async function seed() {
               {
                 title: "Flexbox and Grid",
                 description: "Modern CSS layout techniques",
-                videoUrl: "https://example.com/video6",
+                videoUrl: "https://www.youtube.com/watch?v=JJSoEo8JSnc",
                 duration: 30,
                 order: 3,
                 isFree: false,
@@ -144,7 +144,7 @@ async function seed() {
               {
                 title: "JavaScript Basics",
                 description: "Variables, data types, and operators",
-                videoUrl: "https://example.com/video7",
+                videoUrl: "https://www.youtube.com/watch?v=W6NZfCO5SIk",
                 duration: 25,
                 order: 1,
                 isFree: false,
@@ -152,7 +152,7 @@ async function seed() {
               {
                 title: "Functions and Scope",
                 description: "Understanding functions and variable scope",
-                videoUrl: "https://example.com/video8",
+                videoUrl: "https://www.youtube.com/watch?v=xUI5Tsl2JpY",
                 duration: 28,
                 order: 2,
                 isFree: false,
@@ -160,7 +160,7 @@ async function seed() {
               {
                 title: "DOM Manipulation",
                 description: "Interacting with web pages using JavaScript",
-                videoUrl: "https://example.com/video9",
+                videoUrl: "https://www.youtube.com/watch?v=y17RuWkWdn8",
                 duration: 35,
                 order: 3,
                 isFree: false,
@@ -208,7 +208,7 @@ async function seed() {
               {
                 title: "Python Setup and Basics",
                 description: "Setting up your Python environment",
-                videoUrl: "https://example.com/py1",
+                videoUrl: "https://www.youtube.com/watch?v=rfscVS0vtbw",
                 duration: 20,
                 order: 1,
                 isFree: true,
@@ -216,7 +216,7 @@ async function seed() {
               {
                 title: "Data Types and Structures",
                 description: "Lists, dictionaries, tuples, and sets",
-                videoUrl: "https://example.com/py2",
+                videoUrl: "https://www.youtube.com/watch?v=gOMW_n2-2Mw",
                 duration: 30,
                 order: 2,
                 isFree: true,
@@ -224,7 +224,7 @@ async function seed() {
               {
                 title: "Functions and Modules",
                 description: "Creating reusable code",
-                videoUrl: "https://example.com/py3",
+                videoUrl: "https://www.youtube.com/watch?v=9Os0o3wzS_I",
                 duration: 25,
                 order: 3,
                 isFree: false,
@@ -239,7 +239,7 @@ async function seed() {
               {
                 title: "Introduction to Pandas",
                 description: "DataFrames and Series",
-                videoUrl: "https://example.com/py4",
+                videoUrl: "https://www.youtube.com/watch?v=vmEHCJofslg",
                 duration: 35,
                 order: 1,
                 isFree: false,
@@ -247,7 +247,7 @@ async function seed() {
               {
                 title: "Data Cleaning",
                 description: "Handling missing data and outliers",
-                videoUrl: "https://example.com/py5",
+                videoUrl: "https://www.youtube.com/watch?v=ZOX18HfLHGQ",
                 duration: 40,
                 order: 2,
                 isFree: false,
@@ -255,7 +255,7 @@ async function seed() {
               {
                 title: "Data Aggregation",
                 description: "Grouping and summarizing data",
-                videoUrl: "https://example.com/py6",
+                videoUrl: "https://www.youtube.com/watch?v=txMdrV1kYvQ",
                 duration: 30,
                 order: 3,
                 isFree: false,
@@ -270,7 +270,7 @@ async function seed() {
               {
                 title: "What is Machine Learning?",
                 description: "Overview of ML concepts",
-                videoUrl: "https://example.com/py7",
+                videoUrl: "https://www.youtube.com/watch?v=ukzFI9rgwfU",
                 duration: 25,
                 order: 1,
                 isFree: false,
@@ -278,7 +278,7 @@ async function seed() {
               {
                 title: "Supervised Learning",
                 description: "Classification and regression",
-                videoUrl: "https://example.com/py8",
+                videoUrl: "https://www.youtube.com/watch?v=4qVRBYAdLAo",
                 duration: 45,
                 order: 2,
                 isFree: false,
@@ -286,7 +286,7 @@ async function seed() {
               {
                 title: "Model Evaluation",
                 description: "Metrics and validation techniques",
-                videoUrl: "https://example.com/py9",
+                videoUrl: "https://www.youtube.com/watch?v=85dtiMz9tSo",
                 duration: 35,
                 order: 3,
                 isFree: false,
@@ -334,7 +334,7 @@ async function seed() {
               {
                 title: "Custom Hooks",
                 description: "Building reusable custom hooks",
-                videoUrl: "https://example.com/react1",
+                videoUrl: "https://www.youtube.com/watch?v=J-g9ZJha8FE",
                 duration: 30,
                 order: 1,
                 isFree: true,
@@ -342,7 +342,7 @@ async function seed() {
               {
                 title: "useReducer Patterns",
                 description: "Complex state management with useReducer",
-                videoUrl: "https://example.com/react2",
+                videoUrl: "https://www.youtube.com/watch?v=kK_Wqx3RnHk",
                 duration: 35,
                 order: 2,
                 isFree: false,
@@ -350,7 +350,7 @@ async function seed() {
               {
                 title: "useCallback and useMemo",
                 description: "Performance optimization hooks",
-                videoUrl: "https://example.com/react3",
+                videoUrl: "https://www.youtube.com/watch?v=uojLJFt9SzY",
                 duration: 28,
                 order: 3,
                 isFree: false,
@@ -365,7 +365,7 @@ async function seed() {
               {
                 title: "Compound Components",
                 description: "Building flexible component APIs",
-                videoUrl: "https://example.com/react4",
+                videoUrl: "https://www.youtube.com/watch?v=vPRdY87_SH0",
                 duration: 40,
                 order: 1,
                 isFree: false,
@@ -373,7 +373,7 @@ async function seed() {
               {
                 title: "Render Props",
                 description: "Sharing code between components",
-                videoUrl: "https://example.com/react5",
+                videoUrl: "https://www.youtube.com/watch?v=NdapMDgNhtE",
                 duration: 35,
                 order: 2,
                 isFree: false,
@@ -381,7 +381,7 @@ async function seed() {
               {
                 title: "Higher-Order Components",
                 description: "HOC patterns and use cases",
-                videoUrl: "https://example.com/react6",
+                videoUrl: "https://www.youtube.com/watch?v=B6aNv8nkUSw",
                 duration: 32,
                 order: 3,
                 isFree: false,

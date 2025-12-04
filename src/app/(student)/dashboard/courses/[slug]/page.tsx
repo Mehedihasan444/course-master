@@ -48,6 +48,24 @@ async function getCourseWithProgress(slug: string, userId: string) {
   };
 }
 
+// Helper function to check if a lesson is completed
+function isLessonCompleted(
+  enrollment: { progress?: Array<{ lessons?: Array<{ lessonId: string; completed: boolean }> }> },
+  lessonId: string
+): boolean {
+  if (!enrollment.progress) return false;
+  
+  for (const moduleProgress of enrollment.progress) {
+    if (!moduleProgress.lessons) continue;
+    for (const lessonProgress of moduleProgress.lessons) {
+      if (lessonProgress.lessonId === lessonId && lessonProgress.completed) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
 export default async function CoursePlayerPage({
   params,
 }: {
@@ -68,7 +86,7 @@ export default async function CoursePlayerPage({
   for (let i = 0; i < course.modules.length; i++) {
     for (let j = 0; j < course.modules[i].lessons.length; j++) {
       const lesson = course.modules[i].lessons[j];
-      const isCompleted = enrollment.completedLessonIds.includes(lesson._id);
+      const isCompleted = isLessonCompleted(enrollment, lesson._id);
       if (!isCompleted && !nextLesson) {
         nextLesson = {
           moduleIndex: i,
@@ -187,7 +205,7 @@ export default async function CoursePlayerPage({
               moduleIndex: number
             ) => {
               const completedInModule = module.lessons.filter((l) =>
-                enrollment.completedLessonIds.includes(l._id)
+                isLessonCompleted(enrollment, l._id)
               ).length;
               const moduleProgress = Math.round(
                 (completedInModule / module.lessons.length) * 100
@@ -219,7 +237,8 @@ export default async function CoursePlayerPage({
                   <CardContent className="pt-2">
                     <ul className="divide-y divide-surface-100">
                       {module.lessons.map((lesson, lessonIndex) => {
-                        const isCompleted = enrollment.completedLessonIds.includes(
+                        const isCompleted = isLessonCompleted(
+                          enrollment,
                           lesson._id
                         );
                         const isCurrent =
