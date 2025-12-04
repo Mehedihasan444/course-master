@@ -18,6 +18,7 @@ import {
   DollarSign,
   FileText,
   Bell,
+  GraduationCap,
 } from "lucide-react";
 
 interface AdminLayoutProps {
@@ -44,6 +45,11 @@ const sidebarItems = [
     title: "Courses",
     href: "/admin/dashboard/courses",
     icon: BookOpen,
+  },
+  {
+    title: "Enrollments",
+    href: "/admin/dashboard/enrollments",
+    icon: GraduationCap,
   },
   {
     title: "Assignments",
