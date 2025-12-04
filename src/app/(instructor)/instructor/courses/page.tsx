@@ -19,8 +19,6 @@ import {
   Search,
   Edit,
   Eye,
-  MoreVertical,
-  Clock,
 } from "lucide-react";
 
 interface SearchParams {
@@ -136,11 +134,16 @@ export default async function InstructorCoursesPage({
               />
             </div>
             <div className="w-full sm:w-48">
-              <Select name="status" defaultValue={params.status || ""}>
-                <option value="">All Courses</option>
-                <option value="published">Published</option>
-                <option value="draft">Draft</option>
-              </Select>
+              <Select
+                name="status"
+                defaultValue={params.status || ""}
+                placeholder="All Courses"
+                options={[
+                  { value: "", label: "All Courses" },
+                  { value: "published", label: "Published" },
+                  { value: "draft", label: "Draft" },
+                ]}
+              />
             </div>
             <button
               type="submit"

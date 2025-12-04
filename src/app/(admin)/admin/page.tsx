@@ -10,7 +10,6 @@ import {
   DollarSign,
   TrendingUp,
   ArrowUpRight,
-  ArrowDownRight,
   UserPlus,
   ShoppingCart,
   Star,
@@ -76,7 +75,7 @@ export default async function AdminDashboardPage() {
           Admin Dashboard
         </h1>
         <p className="text-surface-500 mt-1">
-          Overview of your platform's performance
+          Overview of your platform&lsquo;s performance
         </p>
       </div>
 
@@ -206,7 +205,7 @@ export default async function AdminDashboardPage() {
                       <Badge
                         variant={
                           user.role === "admin"
-                            ? "primary"
+                            ? "default"
                             : user.role === "instructor"
                             ? "secondary"
                             : "outline"

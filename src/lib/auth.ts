@@ -7,7 +7,7 @@ import User, { IUser } from "@/models/User";
 export interface JWTPayload {
   userId: string;
   email: string;
-  role: "student" | "admin";
+  role: "student" | "instructor" | "admin";
 }
 
 export function signToken(payload: JWTPayload): string {

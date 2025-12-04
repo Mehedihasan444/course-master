@@ -8,8 +8,6 @@ import {
   BookOpen,
   Users,
   DollarSign,
-  TrendingUp,
-  Eye,
   Star,
   Plus,
   ArrowRight,
@@ -31,15 +29,19 @@ async function getInstructorStats(userId: string) {
   const totalStudents = new Set(
     enrollments.map((e) => e.student.toString())
   ).size;
-  const totalRevenue = enrollments.reduce((acc, e) => acc + (e.amountPaid || 0), 0);
+  // Revenue would require a Payment model - using enrollment count * avg price as estimate
+  const avgCoursePrice = courses.length > 0 
+    ? courses.reduce((acc, c) => acc + (c.discountPrice || c.price), 0) / courses.length 
+    : 0;
+  const estimatedRevenue = enrollments.length * avgCoursePrice;
   const publishedCourses = courses.filter((c) => c.isPublished).length;
-  const totalViews = courses.reduce((acc, c) => acc + (c.views || 0), 0);
+  const totalEnrollments = enrollments.length;
 
-  // Calculate average rating
-  const allRatings = courses.flatMap((c) => c.reviews?.map((r: { rating: number }) => r.rating) || []);
+  // Calculate average rating from courses
+  const coursesWithRating = courses.filter((c) => c.reviewCount > 0);
   const avgRating =
-    allRatings.length > 0
-      ? allRatings.reduce((a: number, b: number) => a + b, 0) / allRatings.length
+    coursesWithRating.length > 0
+      ? coursesWithRating.reduce((a, c) => a + c.rating, 0) / coursesWithRating.length
       : 0;
 
   // Recent enrollments
@@ -57,8 +59,8 @@ async function getInstructorStats(userId: string) {
       totalCourses: courses.length,
       publishedCourses,
       totalStudents,
-      totalRevenue,
-      totalViews,
+      totalRevenue: estimatedRevenue,
+      totalEnrollments,
       avgRating: avgRating.toFixed(1),
     },
     courses: JSON.parse(JSON.stringify(courses.slice(0, 4))),
@@ -81,7 +83,7 @@ export default async function InstructorDashboardPage() {
             Welcome back, {user!.name.split(" ")[0]}!
           </h1>
           <p className="text-surface-500 mt-1">
-            Here's what's happening with your courses
+            Here&lsquo;s what&lsquo;s happening with your courses
           </p>
         </div>
         <Link href="/instructor/courses/new">

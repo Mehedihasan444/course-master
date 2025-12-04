@@ -1,4 +1,4 @@
-import Link from "next/link";
+
 import { connectDB } from "@/lib/db";
 import User from "@/models/User";
 import {
@@ -13,7 +13,6 @@ import {
   Search,
   Edit,
   Trash2,
-  MoreVertical,
   Shield,
   Mail,
   Calendar,
@@ -124,12 +123,16 @@ export default async function AdminUsersPage({
               />
             </div>
             <div className="w-full sm:w-48">
-              <Select name="role" defaultValue={params.role || "all"}>
-                <option value="all">All Roles</option>
-                <option value="student">Students</option>
-                <option value="instructor">Instructors</option>
-                <option value="admin">Admins</option>
-              </Select>
+              <Select
+                name="role"
+                defaultValue={params.role || "all"}
+                options={[
+                  { value: "all", label: "All Roles" },
+                  { value: "student", label: "Students" },
+                  { value: "instructor", label: "Instructors" },
+                  { value: "admin", label: "Admins" },
+                ]}
+              />
             </div>
             <button
               type="submit"
@@ -207,7 +210,7 @@ export default async function AdminUsersPage({
                         <Badge
                           variant={
                             user.role === "admin"
-                              ? "primary"
+                              ? "default"
                               : user.role === "instructor"
                               ? "secondary"
                               : "outline"

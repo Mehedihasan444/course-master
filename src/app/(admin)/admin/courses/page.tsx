@@ -138,11 +138,15 @@ export default async function AdminCoursesPage({
               />
             </div>
             <div className="w-full sm:w-48">
-              <Select name="status" defaultValue={params.status || ""}>
-                <option value="">All Status</option>
-                <option value="published">Published</option>
-                <option value="draft">Draft</option>
-              </Select>
+              <Select
+                name="status"
+                defaultValue={params.status || ""}
+                options={[
+                  { value: "", label: "All Status" },
+                  { value: "published", label: "Published" },
+                  { value: "draft", label: "Draft" },
+                ]}
+              />
             </div>
             <button
               type="submit"

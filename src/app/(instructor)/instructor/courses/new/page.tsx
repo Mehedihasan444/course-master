@@ -214,27 +214,28 @@ export default function CreateCoursePage() {
                 <label className="block text-sm font-medium text-surface-700 mb-1">
                   Category *
                 </label>
-                <Select {...register("category")} error={errors.category?.message}>
-                  <option value="">Select category</option>
-                  {COURSE_CATEGORIES.map((cat) => (
-                    <option key={cat} value={cat}>
-                      {cat}
-                    </option>
-                  ))}
-                </Select>
+                <Select
+                  {...register("category")}
+                  error={errors.category?.message}
+                  placeholder="Select category"
+                  options={COURSE_CATEGORIES.map((cat) => ({
+                    value: cat,
+                    label: cat,
+                  }))}
+                />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-surface-700 mb-1">
                   Level *
                 </label>
-                <Select {...register("level")}>
-                  {COURSE_LEVELS.map((level) => (
-                    <option key={level.value} value={level.value}>
-                      {level.label}
-                    </option>
-                  ))}
-                </Select>
+                <Select
+                  {...register("level")}
+                  options={COURSE_LEVELS.map((level) => ({
+                    value: level.toLowerCase(),
+                    label: level,
+                  }))}
+                />
               </div>
 
               <div>
@@ -432,7 +433,6 @@ function ModuleEditor({
                       `modules.${moduleIndex}.lessons.${lessonIndex}.title`
                     )}
                     placeholder="Lesson title"
-                    size="sm"
                   />
                 </div>
 
@@ -441,11 +441,12 @@ function ModuleEditor({
                     {...register(
                       `modules.${moduleIndex}.lessons.${lessonIndex}.type`
                     )}
-                  >
-                    <option value="video">Video</option>
-                    <option value="article">Article</option>
-                    <option value="quiz">Quiz</option>
-                  </Select>
+                    options={[
+                      { value: "video", label: "Video" },
+                      { value: "article", label: "Article" },
+                      { value: "quiz", label: "Quiz" },
+                    ]}
+                  />
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -457,7 +458,6 @@ function ModuleEditor({
                     )}
                     placeholder="Min"
                     min="1"
-                    size="sm"
                     className="w-20"
                   />
                   <span className="text-sm text-surface-500">min</span>

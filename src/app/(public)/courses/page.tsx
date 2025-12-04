@@ -27,8 +27,9 @@ import {
 } from "lucide-react";
 import { formatPrice } from "@/lib/utils";
 import { COURSE_CATEGORIES, COURSE_LEVELS } from "@/lib/constants";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { fetchCourses, setFilters, clearFilters } from "@/store/slices/courseSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCourses, setFilters, clearFilters, CoursesState } from "@/store/slices/courseSlice";
+import type { AppDispatch } from "@/store";
 
 interface Course {
   _id: string;
@@ -60,13 +61,13 @@ const sortOptions = [
 function CoursesContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const dispatch = useAppDispatch();
-  const { courses, isLoading, totalPages, currentPage, filters } = useAppSelector(
-    (state) => state.courses
+  const dispatch = useDispatch<AppDispatch>();
+  const { courses, isLoading, totalPages, currentPage, filters } = useSelector(
+    (state: { courses: CoursesState }) => state.courses
   );
   
   const [showFilters, setShowFilters] = useState(false);
-  const [user, setUser] = useState<{ name: string; email: string; role: "student" | "admin"; avatar?: string } | null>(null);
+  const [user, setUser] = useState<{ name: string; email: string; role: "student" | "instructor" | "admin"; avatar?: string } | null>(null);
 
   // Get initial values from URL
   useEffect(() => {

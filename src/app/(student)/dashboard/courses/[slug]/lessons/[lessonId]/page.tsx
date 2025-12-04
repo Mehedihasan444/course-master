@@ -35,15 +35,24 @@ async function getLessonData(slug: string, lessonId: string, userId: string) {
   const allLessons: Array<{
     _id: string;
     title: string;
-    type: string;
-    content: string;
-    videoUrl?: string;
+    description: string;
+    videoUrl: string;
     duration: number;
+    order: number;
+    isFree: boolean;
   }> = [];
 
-  for (const module of course.modules) {
-    for (const lesson of module.lessons) {
-      allLessons.push(lesson);
+  for (const courseModule of course.modules) {
+    for (const lesson of courseModule.lessons) {
+      allLessons.push({
+        _id: lesson._id.toString(),
+        title: lesson.title,
+        description: lesson.description,
+        videoUrl: lesson.videoUrl,
+        duration: lesson.duration,
+        order: lesson.order,
+        isFree: lesson.isFree,
+      });
     }
   }
 
@@ -65,9 +74,14 @@ async function getLessonData(slug: string, lessonId: string, userId: string) {
     return null;
   }
 
-  const isCompleted = enrollment.completedLessonIds
-    .map((id: { toString: () => string }) => id.toString())
-    .includes(lessonId);
+  // Check if lesson is completed by looking through progress
+  const isCompleted = enrollment.progress?.some(
+    (moduleProgress: { lessons?: Array<{ lessonId: { toString: () => string }; completed: boolean }> }) =>
+      moduleProgress.lessons?.some(
+        (lessonProgress) =>
+          lessonProgress.lessonId.toString() === lessonId && lessonProgress.completed
+      )
+  ) ?? false;
 
   return {
     course: JSON.parse(JSON.stringify(course)),

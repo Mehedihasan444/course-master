@@ -21,7 +21,7 @@ export interface Course {
   isFeatured: boolean;
 }
 
-interface CoursesState {
+export interface CoursesState {
   courses: Course[];
   featuredCourses: Course[];
   currentCourse: Course | null;

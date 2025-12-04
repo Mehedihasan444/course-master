@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { Button, Badge, Progress, Avatar } from "@/components/ui";
+import {  Badge, Avatar } from "@/components/ui";
 import {
   Star,
   Clock,
@@ -12,18 +12,18 @@ import {
   CheckCircle,
   Globe,
   Award,
-  ChevronDown,
-  Lock,
   FileText,
   HelpCircle,
 } from "lucide-react";
-import { formatPrice, formatDate } from "@/lib/utils";
+import { formatPrice } from "@/lib/utils";
 import { connectDB } from "@/lib/db";
 import Course, { IModule, ILesson } from "@/models/Course";
 import Enrollment from "@/models/Enrollment";
 import { getCurrentUser } from "@/lib/auth";
 import { EnrollButton } from "./EnrollButton";
 import { ModuleAccordion } from "./ModuleAccordion";
+// import { EnrollButton } from "./EnrollButton";
+// import { ModuleAccordion } from "./ModuleAccordion";
 
 interface Props {
   params: Promise<{ slug: string }>;

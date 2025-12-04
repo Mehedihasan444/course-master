@@ -22,7 +22,7 @@ export default async function StudentDashboardLayout({
   const userData = {
     name: user.name,
     email: user.email,
-    role: user.role as "student" | "admin",
+    role: user.role as "student" | "instructor" | "admin",
     avatar: user.avatar,
   };
 

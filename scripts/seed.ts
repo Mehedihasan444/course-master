@@ -21,7 +21,7 @@ async function seed() {
     // Create users
     const hashedPassword = await bcrypt.hash("password123", 10);
 
-    const admin = await User.create({
+    await User.create({
       name: "Admin User",
       email: "admin@coursemaster.com",
       password: hashedPassword,
@@ -62,7 +62,7 @@ async function seed() {
     console.log("Created student users");
 
     // Create courses
-    const courses = await Course.create([
+    const courseData = [
       {
         title: "Complete Web Development Bootcamp",
         slug: "complete-web-development-bootcamp",
@@ -600,13 +600,19 @@ async function seed() {
         isPublished: true,
         isFeatured: false,
       },
-    ]);
+    ];
+    
+    const courses = [];
+    for (const data of courseData) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const course = await Course.create(data as any);
+      courses.push(Array.isArray(course) ? course[0] : course);
+    }
     console.log(`Created ${courses.length} courses`);
 
     // Create enrollments with proper structure
     const course0Modules = courses[0].modules;
     const course1Modules = courses[1].modules;
-    const course2Modules = courses[2].modules;
 
     await Enrollment.create([
       {
