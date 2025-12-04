@@ -1,362 +1,701 @@
-import { connectDB } from "../src/lib/db";
+import dotenv from "dotenv";
+dotenv.config({ path: ".env.local" });
+
+import bcrypt from "bcryptjs";
+import connectDB from "../src/lib/db";
 import User from "../src/models/User";
 import Course from "../src/models/Course";
-
-const sampleCourses = [
-  {
-    title: "Complete Web Development Bootcamp 2024",
-    slug: "complete-web-development-bootcamp-2024",
-    description: `Master web development from scratch! This comprehensive bootcamp covers everything you need to become a full-stack web developer.
-
-You'll learn HTML, CSS, JavaScript, React, Node.js, MongoDB, and more. Build real-world projects and gain the skills employers are looking for.
-
-Whether you're a complete beginner or looking to level up your skills, this course will take you from zero to hero in web development.`,
-    shortDescription: "Learn HTML, CSS, JavaScript, React, Node.js & MongoDB. Build real projects and become a full-stack developer.",
-    thumbnail: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=450&fit=crop",
-    previewVideo: "",
-    category: "Web Development",
-    level: "beginner" as const,
-    price: 99.99,
-    discountPrice: 49.99,
-    isFeatured: true,
-    isPublished: true,
-    modules: [
-      {
-        title: "Getting Started with Web Development",
-        order: 1,
-        lessons: [
-          { title: "Course Introduction", type: "video" as const, duration: 5, isFree: true, order: 1 },
-          { title: "How the Web Works", type: "video" as const, duration: 12, isFree: true, order: 2 },
-          { title: "Setting Up Your Development Environment", type: "video" as const, duration: 15, isFree: false, order: 3 },
-        ],
-      },
-      {
-        title: "HTML Fundamentals",
-        order: 2,
-        lessons: [
-          { title: "HTML Basics", type: "video" as const, duration: 20, isFree: false, order: 1 },
-          { title: "HTML Structure & Semantics", type: "video" as const, duration: 18, isFree: false, order: 2 },
-          { title: "Forms and Input Elements", type: "video" as const, duration: 25, isFree: false, order: 3 },
-          { title: "HTML Practice Quiz", type: "quiz" as const, duration: 10, isFree: false, order: 4 },
-        ],
-      },
-      {
-        title: "CSS Mastery",
-        order: 3,
-        lessons: [
-          { title: "CSS Fundamentals", type: "video" as const, duration: 22, isFree: false, order: 1 },
-          { title: "Flexbox Layout", type: "video" as const, duration: 30, isFree: false, order: 2 },
-          { title: "CSS Grid", type: "video" as const, duration: 28, isFree: false, order: 3 },
-          { title: "Responsive Design", type: "video" as const, duration: 35, isFree: false, order: 4 },
-        ],
-      },
-    ],
-    whatYouWillLearn: [
-      "Build professional websites from scratch",
-      "Master HTML5 and CSS3",
-      "Create responsive layouts with Flexbox and Grid",
-      "Build dynamic web apps with JavaScript",
-      "Develop full-stack applications with React and Node.js",
-    ],
-    requirements: [
-      "No prior programming experience required",
-      "A computer with internet access",
-      "Eagerness to learn",
-    ],
-    rating: 4.8,
-    reviewCount: 1234,
-    enrolledCount: 5678,
-  },
-  {
-    title: "React - The Complete Guide 2024",
-    slug: "react-complete-guide-2024",
-    description: `Dive deep into React.js and learn how to build modern, scalable web applications.
-
-This course covers React fundamentals, hooks, state management with Redux, routing, testing, and deploying React applications.
-
-You'll build multiple projects including a complete e-commerce application from scratch.`,
-    shortDescription: "Master React.js with hooks, Redux, React Router, and more. Build production-ready applications.",
-    thumbnail: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&h=450&fit=crop",
-    category: "Web Development",
-    level: "intermediate" as const,
-    price: 89.99,
-    discountPrice: 44.99,
-    isFeatured: true,
-    isPublished: true,
-    modules: [
-      {
-        title: "React Basics",
-        order: 1,
-        lessons: [
-          { title: "What is React?", type: "video" as const, duration: 8, isFree: true, order: 1 },
-          { title: "Creating Your First React App", type: "video" as const, duration: 15, isFree: true, order: 2 },
-          { title: "JSX Deep Dive", type: "video" as const, duration: 20, isFree: false, order: 3 },
-        ],
-      },
-      {
-        title: "React Hooks",
-        order: 2,
-        lessons: [
-          { title: "useState Hook", type: "video" as const, duration: 18, isFree: false, order: 1 },
-          { title: "useEffect Hook", type: "video" as const, duration: 22, isFree: false, order: 2 },
-          { title: "Custom Hooks", type: "video" as const, duration: 25, isFree: false, order: 3 },
-        ],
-      },
-    ],
-    whatYouWillLearn: [
-      "Build powerful React applications",
-      "Master React Hooks",
-      "State management with Redux Toolkit",
-      "React Router for navigation",
-      "Testing React components",
-    ],
-    requirements: [
-      "Basic JavaScript knowledge",
-      "HTML and CSS fundamentals",
-      "Understanding of ES6+ features",
-    ],
-    rating: 4.9,
-    reviewCount: 892,
-    enrolledCount: 3456,
-  },
-  {
-    title: "Python for Data Science and Machine Learning",
-    slug: "python-data-science-machine-learning",
-    description: `Learn Python programming and use it for data science and machine learning projects.
-
-This comprehensive course covers Python basics, NumPy, Pandas, data visualization with Matplotlib and Seaborn, and machine learning with Scikit-Learn.`,
-    shortDescription: "Master Python for data analysis, visualization, and machine learning with hands-on projects.",
-    thumbnail: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&h=450&fit=crop",
-    category: "Data Science",
-    level: "beginner" as const,
-    price: 119.99,
-    discountPrice: 59.99,
-    isFeatured: true,
-    isPublished: true,
-    modules: [
-      {
-        title: "Python Fundamentals",
-        order: 1,
-        lessons: [
-          { title: "Introduction to Python", type: "video" as const, duration: 10, isFree: true, order: 1 },
-          { title: "Variables and Data Types", type: "video" as const, duration: 15, isFree: true, order: 2 },
-          { title: "Control Flow", type: "video" as const, duration: 20, isFree: false, order: 3 },
-          { title: "Functions", type: "video" as const, duration: 25, isFree: false, order: 4 },
-        ],
-      },
-      {
-        title: "Data Analysis with Pandas",
-        order: 2,
-        lessons: [
-          { title: "Introduction to Pandas", type: "video" as const, duration: 18, isFree: false, order: 1 },
-          { title: "Data Manipulation", type: "video" as const, duration: 30, isFree: false, order: 2 },
-          { title: "Data Cleaning", type: "video" as const, duration: 28, isFree: false, order: 3 },
-        ],
-      },
-    ],
-    whatYouWillLearn: [
-      "Python programming from basics to advanced",
-      "Data analysis with NumPy and Pandas",
-      "Data visualization with Matplotlib",
-      "Machine learning with Scikit-Learn",
-      "Real-world data science projects",
-    ],
-    requirements: [
-      "No prior programming experience needed",
-      "Basic math knowledge helpful",
-      "Computer with internet access",
-    ],
-    rating: 4.7,
-    reviewCount: 567,
-    enrolledCount: 2345,
-  },
-  {
-    title: "AWS Certified Solutions Architect",
-    slug: "aws-certified-solutions-architect",
-    description: `Prepare for the AWS Certified Solutions Architect exam with this comprehensive course.
-
-Learn about AWS services, architecture best practices, security, and cost optimization. Includes practice exams and hands-on labs.`,
-    shortDescription: "Pass the AWS Solutions Architect exam with hands-on labs and practice tests.",
-    thumbnail: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=450&fit=crop",
-    category: "Cloud Computing",
-    level: "intermediate" as const,
-    price: 149.99,
-    discountPrice: 74.99,
-    isFeatured: false,
-    isPublished: true,
-    modules: [
-      {
-        title: "AWS Fundamentals",
-        order: 1,
-        lessons: [
-          { title: "Introduction to AWS", type: "video" as const, duration: 12, isFree: true, order: 1 },
-          { title: "AWS Global Infrastructure", type: "video" as const, duration: 18, isFree: false, order: 2 },
-          { title: "IAM Deep Dive", type: "video" as const, duration: 30, isFree: false, order: 3 },
-        ],
-      },
-    ],
-    whatYouWillLearn: [
-      "Design resilient AWS architectures",
-      "Implement security best practices",
-      "Optimize costs on AWS",
-      "Pass the AWS certification exam",
-    ],
-    requirements: [
-      "Basic IT knowledge",
-      "AWS Free Tier account",
-      "Familiarity with networking concepts",
-    ],
-    rating: 4.6,
-    reviewCount: 234,
-    enrolledCount: 987,
-  },
-  {
-    title: "UI/UX Design Masterclass",
-    slug: "ui-ux-design-masterclass",
-    description: `Learn UI/UX design from scratch and build a portfolio that gets you hired.
-
-Master Figma, design principles, user research, wireframing, prototyping, and design systems.`,
-    shortDescription: "Master UI/UX design with Figma. Learn design principles and build a professional portfolio.",
-    thumbnail: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&h=450&fit=crop",
-    category: "Design",
-    level: "beginner" as const,
-    price: 79.99,
-    discountPrice: 39.99,
-    isFeatured: true,
-    isPublished: true,
-    modules: [
-      {
-        title: "Design Fundamentals",
-        order: 1,
-        lessons: [
-          { title: "Introduction to UI/UX", type: "video" as const, duration: 10, isFree: true, order: 1 },
-          { title: "Design Principles", type: "video" as const, duration: 25, isFree: true, order: 2 },
-          { title: "Color Theory", type: "video" as const, duration: 20, isFree: false, order: 3 },
-          { title: "Typography", type: "video" as const, duration: 18, isFree: false, order: 4 },
-        ],
-      },
-      {
-        title: "Figma Mastery",
-        order: 2,
-        lessons: [
-          { title: "Getting Started with Figma", type: "video" as const, duration: 15, isFree: false, order: 1 },
-          { title: "Components and Variants", type: "video" as const, duration: 30, isFree: false, order: 2 },
-          { title: "Auto Layout", type: "video" as const, duration: 25, isFree: false, order: 3 },
-        ],
-      },
-    ],
-    whatYouWillLearn: [
-      "Master Figma from beginner to advanced",
-      "Create beautiful UI designs",
-      "Conduct user research",
-      "Build a professional design portfolio",
-    ],
-    requirements: [
-      "No prior design experience needed",
-      "Figma account (free)",
-      "Passion for design",
-    ],
-    rating: 4.8,
-    reviewCount: 445,
-    enrolledCount: 1890,
-  },
-  {
-    title: "Node.js - The Complete Guide",
-    slug: "nodejs-complete-guide",
-    description: `Master Node.js, Express, and MongoDB to build scalable backend applications.
-
-Learn RESTful API development, authentication, real-time applications with Socket.io, and deployment.`,
-    shortDescription: "Build scalable backend applications with Node.js, Express, and MongoDB.",
-    thumbnail: "https://images.unsplash.com/photo-1627398242454-45a1465c2479?w=800&h=450&fit=crop",
-    category: "Web Development",
-    level: "intermediate" as const,
-    price: 94.99,
-    discountPrice: 47.99,
-    isFeatured: false,
-    isPublished: true,
-    modules: [
-      {
-        title: "Node.js Basics",
-        order: 1,
-        lessons: [
-          { title: "What is Node.js?", type: "video" as const, duration: 10, isFree: true, order: 1 },
-          { title: "Node.js Modules", type: "video" as const, duration: 20, isFree: false, order: 2 },
-          { title: "File System", type: "video" as const, duration: 18, isFree: false, order: 3 },
-        ],
-      },
-      {
-        title: "Express.js",
-        order: 2,
-        lessons: [
-          { title: "Introduction to Express", type: "video" as const, duration: 15, isFree: false, order: 1 },
-          { title: "Routing", type: "video" as const, duration: 22, isFree: false, order: 2 },
-          { title: "Middleware", type: "video" as const, duration: 25, isFree: false, order: 3 },
-        ],
-      },
-    ],
-    whatYouWillLearn: [
-      "Build RESTful APIs",
-      "Authentication and authorization",
-      "Database integration with MongoDB",
-      "Real-time apps with Socket.io",
-    ],
-    requirements: [
-      "JavaScript knowledge",
-      "Basic HTML/CSS",
-      "Command line familiarity",
-    ],
-    rating: 4.7,
-    reviewCount: 312,
-    enrolledCount: 1456,
-  },
-];
+import Enrollment from "../src/models/Enrollment";
 
 async function seed() {
   try {
     await connectDB();
     console.log("Connected to MongoDB");
 
-    // Create an instructor user
-    let instructor = await User.findOne({ email: "instructor@coursemaster.com" });
-    if (!instructor) {
-      instructor = await User.create({
-        name: "John Instructor",
-        email: "instructor@coursemaster.com",
-        password: "password123",
-        role: "instructor",
-      });
-      console.log("Created instructor user");
-    }
+    // Clear existing data
+    await User.deleteMany({});
+    await Course.deleteMany({});
+    await Enrollment.deleteMany({});
+    console.log("Cleared existing data");
 
-    // Create an admin user
-    let admin = await User.findOne({ email: "admin@coursemaster.com" });
-    if (!admin) {
-      admin = await User.create({
-        name: "Admin User",
-        email: "admin@coursemaster.com",
-        password: "password123",
-        role: "admin",
-      });
-      console.log("Created admin user");
-    }
+    // Create users
+    const hashedPassword = await bcrypt.hash("password123", 10);
 
-    // Create sample courses
-    for (const courseData of sampleCourses) {
-      const existingCourse = await Course.findOne({ slug: courseData.slug });
-      if (!existingCourse) {
-        await Course.create({
-          ...courseData,
-          instructor: instructor._id,
-          instructorName: instructor.name,
-        });
-        console.log(`Created course: ${courseData.title}`);
-      }
-    }
+    const admin = await User.create({
+      name: "Admin User",
+      email: "admin@coursemaster.com",
+      password: hashedPassword,
+      role: "admin",
+    });
+    console.log("Created admin user");
 
-    console.log("Seed completed successfully!");
+    const instructor1 = await User.create({
+      name: "John Smith",
+      email: "john@coursemaster.com",
+      password: hashedPassword,
+      role: "instructor",
+      bio: "Senior Web Developer with 10+ years of experience",
+    });
+
+    const instructor2 = await User.create({
+      name: "Sarah Johnson",
+      email: "sarah@coursemaster.com",
+      password: hashedPassword,
+      role: "instructor",
+      bio: "Data Science expert and Machine Learning enthusiast",
+    });
+    console.log("Created instructor users");
+
+    const student1 = await User.create({
+      name: "Mike Wilson",
+      email: "mike@example.com",
+      password: hashedPassword,
+      role: "student",
+    });
+
+    const student2 = await User.create({
+      name: "Emily Brown",
+      email: "emily@example.com",
+      password: hashedPassword,
+      role: "student",
+    });
+    console.log("Created student users");
+
+    // Create courses
+    const courses = await Course.create([
+      {
+        title: "Complete Web Development Bootcamp",
+        slug: "complete-web-development-bootcamp",
+        description:
+          "Learn web development from scratch. This comprehensive course covers HTML, CSS, JavaScript, React, Node.js, and more. Perfect for beginners who want to become full-stack developers.",
+        shortDescription:
+          "Master web development with this comprehensive bootcamp covering frontend and backend technologies.",
+        instructor: instructor1._id,
+        instructorName: instructor1.name,
+        price: 99.99,
+        discountPrice: 49.99,
+        thumbnail: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800",
+        category: "Web Development",
+        level: "Beginner",
+        language: "English",
+        requirements: [
+          "Basic computer skills",
+          "No programming experience needed",
+          "A computer with internet access",
+        ],
+        whatYouWillLearn: [
+          "Build responsive websites with HTML and CSS",
+          "Master JavaScript fundamentals and ES6+",
+          "Create dynamic web apps with React",
+          "Build REST APIs with Node.js and Express",
+          "Work with databases like MongoDB",
+        ],
+        tags: ["web development", "html", "css", "javascript", "react", "nodejs"],
+        modules: [
+          {
+            title: "Getting Started with HTML",
+            description: "Learn the fundamentals of HTML",
+            order: 1,
+            lessons: [
+              {
+                title: "Introduction to HTML",
+                description: "Learn what HTML is and how it works",
+                videoUrl: "https://example.com/video1",
+                duration: 15,
+                order: 1,
+                isFree: true,
+              },
+              {
+                title: "HTML Elements and Tags",
+                description: "Understanding HTML elements and their usage",
+                videoUrl: "https://example.com/video2",
+                duration: 20,
+                order: 2,
+                isFree: true,
+              },
+              {
+                title: "Forms and Inputs",
+                description: "Creating interactive forms in HTML",
+                videoUrl: "https://example.com/video3",
+                duration: 25,
+                order: 3,
+                isFree: false,
+              },
+            ],
+          },
+          {
+            title: "CSS Fundamentals",
+            description: "Style your web pages with CSS",
+            order: 2,
+            lessons: [
+              {
+                title: "Introduction to CSS",
+                description: "Learn CSS basics and selectors",
+                videoUrl: "https://example.com/video4",
+                duration: 18,
+                order: 1,
+                isFree: false,
+              },
+              {
+                title: "CSS Box Model",
+                description: "Understanding margins, padding, and borders",
+                videoUrl: "https://example.com/video5",
+                duration: 22,
+                order: 2,
+                isFree: false,
+              },
+              {
+                title: "Flexbox and Grid",
+                description: "Modern CSS layout techniques",
+                videoUrl: "https://example.com/video6",
+                duration: 30,
+                order: 3,
+                isFree: false,
+              },
+            ],
+          },
+          {
+            title: "JavaScript Essentials",
+            description: "Master JavaScript programming",
+            order: 3,
+            lessons: [
+              {
+                title: "JavaScript Basics",
+                description: "Variables, data types, and operators",
+                videoUrl: "https://example.com/video7",
+                duration: 25,
+                order: 1,
+                isFree: false,
+              },
+              {
+                title: "Functions and Scope",
+                description: "Understanding functions and variable scope",
+                videoUrl: "https://example.com/video8",
+                duration: 28,
+                order: 2,
+                isFree: false,
+              },
+              {
+                title: "DOM Manipulation",
+                description: "Interacting with web pages using JavaScript",
+                videoUrl: "https://example.com/video9",
+                duration: 35,
+                order: 3,
+                isFree: false,
+              },
+            ],
+          },
+        ],
+        isPublished: true,
+        isFeatured: true,
+      },
+      {
+        title: "Python for Data Science",
+        slug: "python-for-data-science",
+        description:
+          "Master Python programming for data analysis and machine learning. Learn pandas, numpy, matplotlib, and scikit-learn to analyze data and build predictive models.",
+        shortDescription:
+          "Learn Python for data analysis, visualization, and machine learning.",
+        instructor: instructor2._id,
+        instructorName: instructor2.name,
+        price: 129.99,
+        discountPrice: 79.99,
+        thumbnail: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800",
+        category: "Data Science",
+        level: "Intermediate",
+        language: "English",
+        requirements: [
+          "Basic programming knowledge",
+          "Understanding of basic math concepts",
+          "Python installed on your computer",
+        ],
+        whatYouWillLearn: [
+          "Python programming fundamentals",
+          "Data manipulation with Pandas",
+          "Data visualization with Matplotlib and Seaborn",
+          "Machine learning with Scikit-learn",
+          "Real-world data science projects",
+        ],
+        tags: ["python", "data science", "machine learning", "pandas", "numpy"],
+        modules: [
+          {
+            title: "Python Fundamentals",
+            description: "Core Python programming concepts",
+            order: 1,
+            lessons: [
+              {
+                title: "Python Setup and Basics",
+                description: "Setting up your Python environment",
+                videoUrl: "https://example.com/py1",
+                duration: 20,
+                order: 1,
+                isFree: true,
+              },
+              {
+                title: "Data Types and Structures",
+                description: "Lists, dictionaries, tuples, and sets",
+                videoUrl: "https://example.com/py2",
+                duration: 30,
+                order: 2,
+                isFree: true,
+              },
+              {
+                title: "Functions and Modules",
+                description: "Creating reusable code",
+                videoUrl: "https://example.com/py3",
+                duration: 25,
+                order: 3,
+                isFree: false,
+              },
+            ],
+          },
+          {
+            title: "Data Analysis with Pandas",
+            description: "Working with structured data",
+            order: 2,
+            lessons: [
+              {
+                title: "Introduction to Pandas",
+                description: "DataFrames and Series",
+                videoUrl: "https://example.com/py4",
+                duration: 35,
+                order: 1,
+                isFree: false,
+              },
+              {
+                title: "Data Cleaning",
+                description: "Handling missing data and outliers",
+                videoUrl: "https://example.com/py5",
+                duration: 40,
+                order: 2,
+                isFree: false,
+              },
+              {
+                title: "Data Aggregation",
+                description: "Grouping and summarizing data",
+                videoUrl: "https://example.com/py6",
+                duration: 30,
+                order: 3,
+                isFree: false,
+              },
+            ],
+          },
+          {
+            title: "Machine Learning Basics",
+            description: "Introduction to ML algorithms",
+            order: 3,
+            lessons: [
+              {
+                title: "What is Machine Learning?",
+                description: "Overview of ML concepts",
+                videoUrl: "https://example.com/py7",
+                duration: 25,
+                order: 1,
+                isFree: false,
+              },
+              {
+                title: "Supervised Learning",
+                description: "Classification and regression",
+                videoUrl: "https://example.com/py8",
+                duration: 45,
+                order: 2,
+                isFree: false,
+              },
+              {
+                title: "Model Evaluation",
+                description: "Metrics and validation techniques",
+                videoUrl: "https://example.com/py9",
+                duration: 35,
+                order: 3,
+                isFree: false,
+              },
+            ],
+          },
+        ],
+        isPublished: true,
+        isFeatured: true,
+      },
+      {
+        title: "Advanced React Patterns",
+        slug: "advanced-react-patterns",
+        description:
+          "Take your React skills to the next level. Learn advanced patterns, hooks, performance optimization, and state management techniques used by senior developers.",
+        shortDescription:
+          "Master advanced React patterns and best practices for building scalable applications.",
+        instructor: instructor1._id,
+        instructorName: instructor1.name,
+        price: 149.99,
+        discountPrice: 99.99,
+        thumbnail: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800",
+        category: "Web Development",
+        level: "Advanced",
+        language: "English",
+        requirements: [
+          "Strong JavaScript knowledge",
+          "Experience with React basics",
+          "Understanding of ES6+ features",
+        ],
+        whatYouWillLearn: [
+          "Advanced React hooks patterns",
+          "Component composition techniques",
+          "Performance optimization strategies",
+          "State management with Redux and Context",
+          "Testing React applications",
+        ],
+        tags: ["react", "javascript", "frontend", "advanced", "hooks"],
+        modules: [
+          {
+            title: "Advanced Hooks",
+            description: "Master React hooks patterns",
+            order: 1,
+            lessons: [
+              {
+                title: "Custom Hooks",
+                description: "Building reusable custom hooks",
+                videoUrl: "https://example.com/react1",
+                duration: 30,
+                order: 1,
+                isFree: true,
+              },
+              {
+                title: "useReducer Patterns",
+                description: "Complex state management with useReducer",
+                videoUrl: "https://example.com/react2",
+                duration: 35,
+                order: 2,
+                isFree: false,
+              },
+              {
+                title: "useCallback and useMemo",
+                description: "Performance optimization hooks",
+                videoUrl: "https://example.com/react3",
+                duration: 28,
+                order: 3,
+                isFree: false,
+              },
+            ],
+          },
+          {
+            title: "Component Patterns",
+            description: "Advanced component architecture",
+            order: 2,
+            lessons: [
+              {
+                title: "Compound Components",
+                description: "Building flexible component APIs",
+                videoUrl: "https://example.com/react4",
+                duration: 40,
+                order: 1,
+                isFree: false,
+              },
+              {
+                title: "Render Props",
+                description: "Sharing code between components",
+                videoUrl: "https://example.com/react5",
+                duration: 35,
+                order: 2,
+                isFree: false,
+              },
+              {
+                title: "Higher-Order Components",
+                description: "HOC patterns and use cases",
+                videoUrl: "https://example.com/react6",
+                duration: 32,
+                order: 3,
+                isFree: false,
+              },
+            ],
+          },
+        ],
+        isPublished: true,
+        isFeatured: false,
+      },
+      {
+        title: "UI/UX Design Fundamentals",
+        slug: "ui-ux-design-fundamentals",
+        description:
+          "Learn the principles of user interface and user experience design. Create beautiful, user-friendly designs using modern tools and methodologies.",
+        shortDescription:
+          "Master UI/UX design principles and create stunning user interfaces.",
+        instructor: instructor2._id,
+        instructorName: instructor2.name,
+        price: 89.99,
+        discountPrice: null,
+        thumbnail: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800",
+        category: "Design",
+        level: "Beginner",
+        language: "English",
+        requirements: [
+          "No prior design experience needed",
+          "Basic computer skills",
+          "Creative mindset",
+        ],
+        whatYouWillLearn: [
+          "Design principles and theory",
+          "Color theory and typography",
+          "Wireframing and prototyping",
+          "User research methods",
+          "Design tools like Figma",
+        ],
+        tags: ["design", "ui", "ux", "figma", "user experience"],
+        modules: [
+          {
+            title: "Design Fundamentals",
+            description: "Core design principles",
+            order: 1,
+            lessons: [
+              {
+                title: "What is UI/UX Design?",
+                description: "Introduction to design disciplines",
+                videoUrl: "https://example.com/design1",
+                duration: 15,
+                order: 1,
+                isFree: true,
+              },
+              {
+                title: "Design Principles",
+                description: "Balance, contrast, hierarchy, and more",
+                videoUrl: "https://example.com/design2",
+                duration: 25,
+                order: 2,
+                isFree: true,
+              },
+              {
+                title: "Color Theory",
+                description: "Using colors effectively in design",
+                videoUrl: "https://example.com/design3",
+                duration: 30,
+                order: 3,
+                isFree: false,
+              },
+            ],
+          },
+          {
+            title: "User Experience",
+            description: "Creating user-centered designs",
+            order: 2,
+            lessons: [
+              {
+                title: "User Research",
+                description: "Understanding your users",
+                videoUrl: "https://example.com/design4",
+                duration: 35,
+                order: 1,
+                isFree: false,
+              },
+              {
+                title: "User Personas",
+                description: "Creating and using personas",
+                videoUrl: "https://example.com/design5",
+                duration: 25,
+                order: 2,
+                isFree: false,
+              },
+              {
+                title: "User Journey Mapping",
+                description: "Mapping the user experience",
+                videoUrl: "https://example.com/design6",
+                duration: 30,
+                order: 3,
+                isFree: false,
+              },
+            ],
+          },
+        ],
+        isPublished: true,
+        isFeatured: true,
+      },
+      {
+        title: "Mobile App Development with React Native",
+        slug: "mobile-app-development-react-native",
+        description:
+          "Build cross-platform mobile apps for iOS and Android using React Native. Learn navigation, state management, native modules, and app deployment.",
+        shortDescription:
+          "Create professional mobile apps for iOS and Android with React Native.",
+        instructor: instructor1._id,
+        instructorName: instructor1.name,
+        price: 119.99,
+        discountPrice: 69.99,
+        thumbnail: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800",
+        category: "Mobile Development",
+        level: "Intermediate",
+        language: "English",
+        requirements: [
+          "JavaScript proficiency",
+          "React experience recommended",
+          "Mac for iOS development (optional)",
+        ],
+        whatYouWillLearn: [
+          "React Native fundamentals",
+          "Navigation and routing",
+          "State management in mobile apps",
+          "Native modules and APIs",
+          "App store deployment",
+        ],
+        tags: ["react native", "mobile", "ios", "android", "javascript"],
+        modules: [
+          {
+            title: "React Native Basics",
+            description: "Getting started with React Native",
+            order: 1,
+            lessons: [
+              {
+                title: "Setting Up Your Environment",
+                description: "Installing React Native CLI and dependencies",
+                videoUrl: "https://example.com/rn1",
+                duration: 25,
+                order: 1,
+                isFree: true,
+              },
+              {
+                title: "Core Components",
+                description: "View, Text, Image, and more",
+                videoUrl: "https://example.com/rn2",
+                duration: 30,
+                order: 2,
+                isFree: true,
+              },
+              {
+                title: "Styling in React Native",
+                description: "Flexbox and StyleSheet",
+                videoUrl: "https://example.com/rn3",
+                duration: 28,
+                order: 3,
+                isFree: false,
+              },
+            ],
+          },
+          {
+            title: "Navigation",
+            description: "Building app navigation",
+            order: 2,
+            lessons: [
+              {
+                title: "React Navigation Setup",
+                description: "Installing and configuring navigation",
+                videoUrl: "https://example.com/rn4",
+                duration: 20,
+                order: 1,
+                isFree: false,
+              },
+              {
+                title: "Stack Navigator",
+                description: "Screen-to-screen navigation",
+                videoUrl: "https://example.com/rn5",
+                duration: 25,
+                order: 2,
+                isFree: false,
+              },
+              {
+                title: "Tab and Drawer Navigation",
+                description: "Complex navigation patterns",
+                videoUrl: "https://example.com/rn6",
+                duration: 35,
+                order: 3,
+                isFree: false,
+              },
+            ],
+          },
+        ],
+        isPublished: true,
+        isFeatured: false,
+      },
+    ]);
+    console.log(`Created ${courses.length} courses`);
+
+    // Create enrollments with proper structure
+    const course0Modules = courses[0].modules;
+    const course1Modules = courses[1].modules;
+    const course2Modules = courses[2].modules;
+
+    await Enrollment.create([
+      {
+        student: student1._id,
+        course: courses[0]._id,
+        progress: [
+          {
+            moduleId: course0Modules[0]._id,
+            lessons: [
+              { lessonId: course0Modules[0].lessons[0]._id, completed: true, watchedDuration: 15 },
+              { lessonId: course0Modules[0].lessons[1]._id, completed: true, watchedDuration: 20 },
+              { lessonId: course0Modules[0].lessons[2]._id, completed: false, watchedDuration: 5 },
+            ],
+            completed: false,
+          },
+        ],
+        overallProgress: 22,
+        completedLessons: 2,
+        totalLessons: 9,
+        isCompleted: false,
+      },
+      {
+        student: student1._id,
+        course: courses[1]._id,
+        progress: [
+          {
+            moduleId: course1Modules[0]._id,
+            lessons: [
+              { lessonId: course1Modules[0].lessons[0]._id, completed: true, watchedDuration: 20 },
+              { lessonId: course1Modules[0].lessons[1]._id, completed: false, watchedDuration: 10 },
+            ],
+            completed: false,
+          },
+        ],
+        overallProgress: 11,
+        completedLessons: 1,
+        totalLessons: 9,
+        isCompleted: false,
+      },
+      {
+        student: student2._id,
+        course: courses[0]._id,
+        progress: course0Modules.map((module) => ({
+          moduleId: module._id,
+          lessons: module.lessons.map((lesson) => ({
+            lessonId: lesson._id,
+            completed: true,
+            watchedDuration: lesson.duration,
+            completedAt: new Date(),
+          })),
+          completed: true,
+        })),
+        overallProgress: 100,
+        completedLessons: 9,
+        totalLessons: 9,
+        isCompleted: true,
+        completedAt: new Date(),
+      },
+      {
+        student: student2._id,
+        course: courses[2]._id,
+        progress: [],
+        overallProgress: 0,
+        completedLessons: 0,
+        totalLessons: 6,
+        isCompleted: false,
+      },
+    ]);
+    console.log("Created enrollments");
+
+    // Update course enrollment counts
+    await Course.findByIdAndUpdate(courses[0]._id, { enrollmentCount: 2 });
+    await Course.findByIdAndUpdate(courses[1]._id, { enrollmentCount: 1 });
+    await Course.findByIdAndUpdate(courses[2]._id, { enrollmentCount: 1 });
+    console.log("Updated enrollment counts");
+
+    console.log("\n✅ Database seeded successfully!");
+    console.log("\n📧 Test Accounts:");
+    console.log("─".repeat(50));
+    console.log("Admin:      admin@coursemaster.com / password123");
+    console.log("Instructor: john@coursemaster.com / password123");
+    console.log("Instructor: sarah@coursemaster.com / password123");
+    console.log("Student:    mike@example.com / password123");
+    console.log("Student:    emily@example.com / password123");
+    console.log("─".repeat(50));
+
     process.exit(0);
   } catch (error) {
-    console.error("Seed error:", error);
+    console.error("❌ Error seeding database:", error);
     process.exit(1);
   }
 }

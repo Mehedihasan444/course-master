@@ -6,7 +6,7 @@ export interface IUser extends Document {
   name: string;
   email: string;
   password: string;
-  role: "student" | "admin";
+  role: "student" | "instructor" | "admin";
   avatar?: string;
   bio?: string;
   createdAt: Date;
@@ -39,7 +39,7 @@ const userSchema = new Schema<IUser>(
     },
     role: {
       type: String,
-      enum: ["student", "admin"],
+      enum: ["student", "instructor", "admin"],
       default: "student",
     },
     avatar: {
@@ -57,17 +57,15 @@ const userSchema = new Schema<IUser>(
   }
 );
 
-// Index for faster email lookup
-userSchema.index({ email: 1 });
+// Index for faster role lookup (email already indexed via unique: true)
 userSchema.index({ role: 1 });
 
 // Hash password before saving
-userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
+userSchema.pre("save", async function () {
+  if (!this.isModified("password")) return;
   
   const salt = await bcrypt.genSalt(12);
   this.password = await bcrypt.hash(this.password, salt);
-  next();
 });
 
 // Compare password method

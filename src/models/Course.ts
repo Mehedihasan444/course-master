@@ -87,7 +87,7 @@ export interface ICourse extends Document {
 const lessonSchema = new Schema<ILesson>({
   title: { type: String, required: true },
   description: { type: String, default: "" },
-  videoUrl: { type: String, required: true },
+  videoUrl: { type: String, default: "" },
   duration: { type: Number, default: 0 },
   order: { type: Number, required: true },
   isFree: { type: Boolean, default: false },
@@ -206,18 +206,17 @@ const courseSchema = new Schema<ICourse>(
   }
 );
 
-// Indexes for search and filtering
+// Indexes for search and filtering (slug already indexed via unique: true)
 courseSchema.index({ title: "text", description: "text", tags: "text" });
 courseSchema.index({ category: 1 });
 courseSchema.index({ price: 1 });
 courseSchema.index({ level: 1 });
 courseSchema.index({ isPublished: 1 });
 courseSchema.index({ isFeatured: 1 });
-courseSchema.index({ slug: 1 });
 courseSchema.index({ instructor: 1 });
 
 // Generate slug before saving
-courseSchema.pre("save", function (next) {
+courseSchema.pre("save", function () {
   if (this.isModified("title") || !this.slug) {
     this.slug = this.title
       .toLowerCase()
@@ -238,8 +237,6 @@ courseSchema.pre("save", function (next) {
   
   this.totalLessons = totalLessons;
   this.totalDuration = totalDuration;
-  
-  next();
 });
 
 const Course: Model<ICourse> =
