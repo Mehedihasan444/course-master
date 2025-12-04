@@ -70,7 +70,7 @@ export default function RegisterPage() {
       }
     } catch (err) {
       toast.error("Registration failed", {
-        description: err as string,
+        description: err instanceof Error ? err.message : String(err),
       });
     }
   };
