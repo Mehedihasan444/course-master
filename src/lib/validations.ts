@@ -129,6 +129,7 @@ export const courseQuerySchema = z.object({
   level: z.string().optional(),
   minPrice: z.string().optional(),
   maxPrice: z.string().optional(),
+  tag: z.string().optional(),
   sort: z.enum(["newest", "oldest", "price_low", "price_high", "popular", "rating"]).optional(),
 });
 

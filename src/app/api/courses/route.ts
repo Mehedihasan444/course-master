@@ -20,6 +20,7 @@ export async function GET(req: NextRequest) {
       level: searchParams.get("level") || "",
       minPrice: searchParams.get("minPrice") || "",
       maxPrice: searchParams.get("maxPrice") || "",
+      tag: searchParams.get("tag") || "",
       sort: searchParams.get("sort") || "newest",
     });
     
@@ -30,7 +31,7 @@ export async function GET(req: NextRequest) {
       );
     }
     
-    const { page, limit, search, category, level, minPrice, maxPrice, sort } =
+    const { page, limit, search, category, level, minPrice, maxPrice, tag, sort } =
       queryResult.data;
     
     const featured = searchParams.get("featured") === "true";
@@ -58,6 +59,10 @@ export async function GET(req: NextRequest) {
       query.price = {};
       if (minPrice) (query.price as Record<string, number>).$gte = parseFloat(minPrice);
       if (maxPrice) (query.price as Record<string, number>).$lte = parseFloat(maxPrice);
+    }
+    
+    if (tag) {
+      query.tags = tag;
     }
     
     // Build sort

@@ -207,13 +207,14 @@ const courseSchema = new Schema<ICourse>(
 );
 
 // Indexes for search and filtering (slug already indexed via unique: true)
-courseSchema.index({ title: "text", description: "text", tags: "text" });
+courseSchema.index({ title: "text", description: "text", tags: "text", instructorName: "text" });
 courseSchema.index({ category: 1 });
 courseSchema.index({ price: 1 });
 courseSchema.index({ level: 1 });
 courseSchema.index({ isPublished: 1 });
 courseSchema.index({ isFeatured: 1 });
 courseSchema.index({ instructor: 1 });
+courseSchema.index({ tags: 1 });
 
 // Generate slug before saving
 courseSchema.pre("save", function () {
