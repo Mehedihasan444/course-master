@@ -54,15 +54,6 @@ export async function proxy(request: NextRequest) {
     if (pathname.startsWith("/admin") && userRole !== "admin") {
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
-
-    // Instructor routes
-    if (
-      pathname.startsWith("/instructor") &&
-      userRole !== "instructor" &&
-      userRole !== "admin"
-    ) {
-      return NextResponse.redirect(new URL("/dashboard", request.url));
-    }
   }
 
   return NextResponse.next();

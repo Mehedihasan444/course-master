@@ -46,9 +46,9 @@ const sidebarItems = [
     icon: BookOpen,
   },
   {
-    title: "Instructors",
-    href: "/admin/instructors",
-    icon: Shield,
+    title: "Assignments",
+    href: "/admin/dashboard/assignments",
+    icon: FileText,
   },
   {
     title: "Transactions",

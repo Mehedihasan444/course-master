@@ -17,6 +17,14 @@ export type {
   IEnrollment,
   IModuleProgress,
   ILessonProgress,
-  IQuizAttempt,
-  IAssignmentSubmission,
 } from "./Enrollment";
+
+export {
+  AssignmentSubmission,
+  QuizAttempt,
+} from "./Submission";
+export type {
+  IAssignmentSubmission,
+  IQuizAttempt as IQuizAttemptSubmission,
+  IQuizAnswer,
+} from "./Submission";

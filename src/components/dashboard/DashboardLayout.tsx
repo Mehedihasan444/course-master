@@ -25,7 +25,7 @@ interface DashboardLayoutProps {
   user: {
     name: string;
     email: string;
-    role: "student" | "instructor" | "admin";
+    role: "student" | "admin";
     avatar?: string;
   };
 }

@@ -20,30 +20,13 @@ async function seed() {
     // Create users - password will be hashed by the User model's pre-save hook
     const password = "Password123";
 
-    await User.create({
+    const admin = await User.create({
       name: "Admin User",
       email: "admin@coursemaster.com",
       password: password,
       role: "admin",
     });
     console.log("Created admin user");
-
-    const instructor1 = await User.create({
-      name: "John Smith",
-      email: "john@coursemaster.com",
-      password: password,
-      role: "instructor",
-      bio: "Senior Web Developer with 10+ years of experience",
-    });
-
-    const instructor2 = await User.create({
-      name: "Sarah Johnson",
-      email: "sarah@coursemaster.com",
-      password: password,
-      role: "instructor",
-      bio: "Data Science expert and Machine Learning enthusiast",
-    });
-    console.log("Created instructor users");
 
     const student1 = await User.create({
       name: "Mike Wilson",
@@ -60,7 +43,7 @@ async function seed() {
     });
     console.log("Created student users");
 
-    // Create courses
+    // Create courses (admin creates courses, instructorName is just display text)
     const courseData = [
       {
         title: "Complete Web Development Bootcamp",
@@ -69,8 +52,8 @@ async function seed() {
           "Learn web development from scratch. This comprehensive course covers HTML, CSS, JavaScript, React, Node.js, and more. Perfect for beginners who want to become full-stack developers.",
         shortDescription:
           "Master web development with this comprehensive bootcamp covering frontend and backend technologies.",
-        instructor: instructor1._id,
-        instructorName: instructor1.name,
+        instructor: admin._id,
+        instructorName: "John Smith",
         price: 99.99,
         discountPrice: 49.99,
         thumbnail: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800",
@@ -195,8 +178,8 @@ async function seed() {
           "Master Python programming for data analysis and machine learning. Learn pandas, numpy, matplotlib, and scikit-learn to analyze data and build predictive models.",
         shortDescription:
           "Learn Python for data analysis, visualization, and machine learning.",
-        instructor: instructor2._id,
-        instructorName: instructor2.name,
+        instructor: admin._id,
+        instructorName: "Sarah Johnson",
         price: 129.99,
         discountPrice: 79.99,
         thumbnail: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800",
@@ -321,8 +304,8 @@ async function seed() {
           "Take your React skills to the next level. Learn advanced patterns, hooks, performance optimization, and state management techniques used by senior developers.",
         shortDescription:
           "Master advanced React patterns and best practices for building scalable applications.",
-        instructor: instructor1._id,
-        instructorName: instructor1.name,
+        instructor: admin._id,
+        instructorName: "John Smith",
         price: 149.99,
         discountPrice: 99.99,
         thumbnail: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800",
@@ -416,8 +399,8 @@ async function seed() {
           "Learn the principles of user interface and user experience design. Create beautiful, user-friendly designs using modern tools and methodologies.",
         shortDescription:
           "Master UI/UX design principles and create stunning user interfaces.",
-        instructor: instructor2._id,
-        instructorName: instructor2.name,
+        instructor: admin._id,
+        instructorName: "Sarah Johnson",
         price: 89.99,
         discountPrice: null,
         thumbnail: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800",
@@ -511,8 +494,8 @@ async function seed() {
           "Build cross-platform mobile apps for iOS and Android using React Native. Learn navigation, state management, native modules, and app deployment.",
         shortDescription:
           "Create professional mobile apps for iOS and Android with React Native.",
-        instructor: instructor1._id,
-        instructorName: instructor1.name,
+        instructor: admin._id,
+        instructorName: "John Smith",
         price: 119.99,
         discountPrice: 69.99,
         thumbnail: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800",
@@ -691,11 +674,9 @@ async function seed() {
     console.log("\n✅ Database seeded successfully!");
     console.log("\n📧 Test Accounts:");
     console.log("─".repeat(50));
-    console.log("Admin:      admin@coursemaster.com / Password123");
-    console.log("Instructor: john@coursemaster.com / Password123");
-    console.log("Instructor: sarah@coursemaster.com / Password123");
-    console.log("Student:    mike@example.com / Password123");
-    console.log("Student:    emily@example.com / Password123");
+    console.log("Admin:   admin@coursemaster.com / Password123");
+    console.log("Student: mike@example.com / Password123");
+    console.log("Student: emily@example.com / Password123");
     console.log("─".repeat(50));
 
     process.exit(0);
