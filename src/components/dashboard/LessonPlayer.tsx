@@ -6,18 +6,12 @@ import Link from "next/link";
 import { Card, CardContent, Button } from "@/components/ui";
 import {
   Play,
-  Pause,
   CheckCircle,
   ChevronLeft,
   ChevronRight,
   BookOpen,
   FileText,
   Code,
-  Volume2,
-  VolumeX,
-  Maximize,
-  SkipBack,
-  SkipForward,
 } from "lucide-react";
 
 interface Lesson {
@@ -47,8 +41,6 @@ export default function LessonPlayer({
   enrollmentId,
 }: LessonPlayerProps) {
   const router = useRouter();
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
   const [isCompleted, setIsCompleted] = useState(initialCompleted);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -81,78 +73,68 @@ export default function LessonPlayer({
     }
   };
 
+  // Helper function to detect and parse video URLs
+  const getVideoEmbed = (url: string) => {
+    if (!url) return null;
+    
+    // YouTube
+    const youtubeMatch = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+    if (youtubeMatch) {
+      return {
+        type: 'youtube',
+        embedUrl: `https://www.youtube.com/embed/${youtubeMatch[1]}?rel=0&modestbranding=1`,
+      };
+    }
+    
+    // Vimeo
+    const vimeoMatch = url.match(/(?:vimeo\.com\/)(\d+)/);
+    if (vimeoMatch) {
+      return {
+        type: 'vimeo',
+        embedUrl: `https://player.vimeo.com/video/${vimeoMatch[1]}`,
+      };
+    }
+    
+    // Direct video URL
+    return { type: 'direct', embedUrl: url };
+  };
+
   const renderContent = () => {
     switch (lesson.type) {
       case "video":
+        const videoInfo = getVideoEmbed(lesson.videoUrl || '');
+        
         return (
           <div className="aspect-video bg-black rounded-xl overflow-hidden relative group">
-            {/* Video Placeholder */}
-            <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-surface-800 to-surface-900">
-              {lesson.videoUrl ? (
+            {videoInfo ? (
+              videoInfo.type === 'direct' ? (
                 <video
-                  src={lesson.videoUrl}
+                  src={videoInfo.embedUrl}
                   className="w-full h-full object-contain"
                   controls
                   onEnded={markAsCompleted}
                 />
               ) : (
-                <>
-                  <div className="text-center text-white">
-                    <Play className="w-20 h-20 mx-auto mb-4 opacity-50" />
-                    <p className="text-lg opacity-75">Video content placeholder</p>
-                    <p className="text-sm opacity-50 mt-2">
-                      Duration: {lesson.duration} minutes
-                    </p>
-                  </div>
-
-                  {/* Custom Video Controls Overlay */}
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                    {/* Progress Bar */}
-                    <div className="w-full h-1 bg-white/30 rounded-full mb-4 cursor-pointer">
-                      <div className="h-full w-1/3 bg-primary-500 rounded-full relative">
-                        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full" />
-                      </div>
-                    </div>
-
-                    {/* Controls */}
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <button
-                          onClick={() => setIsPlaying(!isPlaying)}
-                          className="p-2 text-white hover:text-primary-400 transition-colors"
-                        >
-                          {isPlaying ? (
-                            <Pause className="w-6 h-6" />
-                          ) : (
-                            <Play className="w-6 h-6" />
-                          )}
-                        </button>
-                        <button className="p-2 text-white hover:text-primary-400 transition-colors">
-                          <SkipBack className="w-5 h-5" />
-                        </button>
-                        <button className="p-2 text-white hover:text-primary-400 transition-colors">
-                          <SkipForward className="w-5 h-5" />
-                        </button>
-                        <button
-                          onClick={() => setIsMuted(!isMuted)}
-                          className="p-2 text-white hover:text-primary-400 transition-colors"
-                        >
-                          {isMuted ? (
-                            <VolumeX className="w-5 h-5" />
-                          ) : (
-                            <Volume2 className="w-5 h-5" />
-                          )}
-                        </button>
-                        <span className="text-white text-sm">5:23 / {lesson.duration}:00</span>
-                      </div>
-                      <button className="p-2 text-white hover:text-primary-400 transition-colors">
-                        <Maximize className="w-5 h-5" />
-                      </button>
-                    </div>
-                  </div>
-                </>
-              )}
-            </div>
+                <iframe
+                  src={videoInfo.embedUrl}
+                  className="w-full h-full"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  title={lesson.title}
+                />
+              )
+            ) : (
+              /* Video Placeholder */
+              <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-surface-800 to-surface-900">
+                <div className="text-center text-white">
+                  <Play className="w-20 h-20 mx-auto mb-4 opacity-50" />
+                  <p className="text-lg opacity-75">Video content placeholder</p>
+                  <p className="text-sm opacity-50 mt-2">
+                    Duration: {lesson.duration} minutes
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         );
 
