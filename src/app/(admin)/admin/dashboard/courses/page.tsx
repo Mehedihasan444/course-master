@@ -2,6 +2,7 @@ import Link from "next/link";
 import { connectDB } from "@/lib/db";
 import Course from "@/models/Course";
 import Enrollment from "@/models/Enrollment";
+import { DeleteCourseButton } from "@/components/admin/DeleteCourseButton";
 import {
   Card,
   CardContent,
@@ -13,12 +14,12 @@ import {
   BookOpen,
   Search,
   Edit,
-  Trash2,
   Eye,
   Users,
   Star,
   CheckCircle,
   XCircle,
+  Plus,
 } from "lucide-react";
 
 interface SearchParams {
@@ -92,9 +93,18 @@ export default async function AdminCoursesPage({
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-surface-900">Courses</h1>
-        <p className="text-surface-500 mt-1">Manage all platform courses</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-surface-900">Courses</h1>
+          <p className="text-surface-500 mt-1">Manage all platform courses</p>
+        </div>
+        <Link
+          href="/admin/dashboard/courses/new"
+          className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+        >
+          <Plus className="w-4 h-4" />
+          Create Course
+        </Link>
       </div>
 
       {/* Stats */}
@@ -275,18 +285,14 @@ export default async function AdminCoursesPage({
                           >
                             <Eye className="w-4 h-4" />
                           </Link>
-                          <button
+                          <Link
+                            href={`/admin/dashboard/courses/${course.slug}/edit`}
                             className="p-2 text-surface-400 hover:text-surface-600 transition-colors"
                             title="Edit"
                           >
                             <Edit className="w-4 h-4" />
-                          </button>
-                          <button
-                            className="p-2 text-surface-400 hover:text-red-600 transition-colors"
-                            title="Delete"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
+                          </Link>
+                          <DeleteCourseButton slug={course.slug} title={course.title} />
                         </div>
                       </td>
                     </tr>
