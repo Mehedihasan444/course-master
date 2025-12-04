@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import User from "@/models/User";
 import { signToken, setAuthCookie } from "@/lib/auth";
-import { registerSchema } from "@/lib/validations";
+import { registerApiSchema } from "@/lib/validations";
 import { AUTH_CONFIG } from "@/lib/constants";
 
 export async function POST(req: NextRequest) {
@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     
     // Validate input
-    const validationResult = registerSchema.safeParse(body);
+    const validationResult = registerApiSchema.safeParse(body);
     
     if (!validationResult.success) {
       const errors = validationResult.error.issues.map((e) => e.message);
