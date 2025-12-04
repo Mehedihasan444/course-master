@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import { AssignmentSubmission } from "@/models/Submission";
-import { verifyAuth } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/auth";
 
 // GET - Get all submissions for admin review
 export async function GET(req: NextRequest) {
   try {
-    const auth = await verifyAuth(req);
-    if (!auth || auth.role !== "admin") {
+    const user = await getCurrentUser();
+    if (!user || user.role !== "admin") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 

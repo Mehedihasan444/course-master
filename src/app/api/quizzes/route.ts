@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
+import mongoose from "mongoose";
 import { connectDB } from "@/lib/db";
 import { QuizAttempt } from "@/models/Submission";
 import Course from "@/models/Course";
 import Enrollment from "@/models/Enrollment";
-import { verifyAuth } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/auth";
 import { z } from "zod";
 
 const quizSubmitSchema = z.object({
@@ -22,8 +23,8 @@ const quizSubmitSchema = z.object({
 // POST - Submit quiz answers
 export async function POST(req: NextRequest) {
   try {
-    const auth = await verifyAuth(req);
-    if (!auth) {
+    const user = await getCurrentUser();
+    if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -43,7 +44,7 @@ export async function POST(req: NextRequest) {
 
     // Check if student is enrolled
     const enrollment = await Enrollment.findOne({
-      student: auth.userId,
+      student: user._id,
       course: courseId,
     });
 
@@ -74,7 +75,7 @@ export async function POST(req: NextRequest) {
       );
       if (!question) {
         return {
-          questionId: answer.questionId,
+          questionId: new mongoose.Types.ObjectId(answer.questionId),
           selectedOption: answer.selectedOption,
           isCorrect: false,
           points: 0,
@@ -104,7 +105,7 @@ export async function POST(req: NextRequest) {
 
     // Create quiz attempt
     const attempt = await QuizAttempt.create({
-      student: auth.userId,
+      student: user._id,
       course: courseId,
       quizId,
       moduleId,
@@ -144,8 +145,8 @@ export async function POST(req: NextRequest) {
 // GET - Get student's quiz attempts
 export async function GET(req: NextRequest) {
   try {
-    const auth = await verifyAuth(req);
-    if (!auth) {
+    const user = await getCurrentUser();
+    if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -154,7 +155,7 @@ export async function GET(req: NextRequest) {
     const courseId = searchParams.get("courseId");
     const quizId = searchParams.get("quizId");
 
-    const query: Record<string, unknown> = { student: auth.userId };
+    const query: Record<string, unknown> = { student: user._id };
     if (courseId) query.course = courseId;
     if (quizId) query.quizId = quizId;
 

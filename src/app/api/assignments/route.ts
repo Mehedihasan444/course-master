@@ -3,7 +3,7 @@ import { connectDB } from "@/lib/db";
 import { AssignmentSubmission } from "@/models/Submission";
 import Course from "@/models/Course";
 import Enrollment from "@/models/Enrollment";
-import { verifyAuth } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/auth";
 import { z } from "zod";
 
 const submissionSchema = z.object({
@@ -17,8 +17,8 @@ const submissionSchema = z.object({
 // POST - Submit an assignment
 export async function POST(req: NextRequest) {
   try {
-    const auth = await verifyAuth(req);
-    if (!auth) {
+    const user = await getCurrentUser();
+    if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
 
     // Check if student is enrolled in the course
     const enrollment = await Enrollment.findOne({
-      student: auth.userId,
+      student: user._id,
       course: courseId,
     });
 
@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
 
     // Check for existing submission
     const existingSubmission = await AssignmentSubmission.findOne({
-      student: auth.userId,
+      student: user._id,
       course: courseId,
       assignmentId,
     });
@@ -88,7 +88,7 @@ export async function POST(req: NextRequest) {
 
     // Create new submission
     const submission = await AssignmentSubmission.create({
-      student: auth.userId,
+      student: user._id,
       course: courseId,
       assignmentId,
       moduleId,
@@ -116,8 +116,8 @@ export async function POST(req: NextRequest) {
 // GET - Get student's submissions
 export async function GET(req: NextRequest) {
   try {
-    const auth = await verifyAuth(req);
-    if (!auth) {
+    const user = await getCurrentUser();
+    if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -125,7 +125,7 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const courseId = searchParams.get("courseId");
 
-    const query: Record<string, unknown> = { student: auth.userId };
+    const query: Record<string, unknown> = { student: user._id };
     if (courseId) {
       query.course = courseId;
     }

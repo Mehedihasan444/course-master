@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import {
@@ -60,11 +60,7 @@ export default function AssignmentSubmissionPage() {
   const [submissionType, setSubmissionType] = useState<"link" | "text">("link");
   const [content, setContent] = useState("");
 
-  useEffect(() => {
-    fetchData();
-  }, [params.slug, assignmentId]);
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       // Fetch course data
       const courseRes = await fetch(`/api/courses/${params.slug}`);
@@ -104,7 +100,11 @@ export default function AssignmentSubmissionPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [params.slug, assignmentId]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

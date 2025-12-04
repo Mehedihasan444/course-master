@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import {
   Button,
@@ -58,7 +58,6 @@ interface QuizResult {
 
 export default function QuizPage() {
   const params = useParams();
-  const router = useRouter();
   const searchParams = useSearchParams();
   const quizId = searchParams.get("quizId");
   const moduleId = searchParams.get("moduleId");
@@ -74,28 +73,7 @@ export default function QuizPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [result, setResult] = useState<QuizResult | null>(null);
 
-  useEffect(() => {
-    fetchData();
-  }, [params.slug, quizId]);
-
-  // Timer effect
-  useEffect(() => {
-    if (!quizStarted || timeLeft <= 0 || result) return;
-
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= 1) {
-          handleSubmit();
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [quizStarted, timeLeft, result]);
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       const res = await fetch(`/api/courses/${params.slug}`);
       const data = await res.json();
@@ -119,19 +97,11 @@ export default function QuizPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [params.slug, quizId]);
 
-  const startQuiz = () => {
-    setQuizStarted(true);
-    setStartedAt(new Date());
-  };
-
-  const selectAnswer = (questionId: string, optionIndex: number) => {
-    setAnswers((prev) => ({
-      ...prev,
-      [questionId]: optionIndex,
-    }));
-  };
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   const handleSubmit = useCallback(async () => {
     if (!quiz || !course || !startedAt || isSubmitting) return;
@@ -170,6 +140,35 @@ export default function QuizPage() {
       setIsSubmitting(false);
     }
   }, [quiz, course, startedAt, answers, moduleId, isSubmitting]);
+
+  // Timer effect
+  useEffect(() => {
+    if (!quizStarted || timeLeft <= 0 || result) return;
+
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          handleSubmit();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [quizStarted, timeLeft, result, handleSubmit]);
+
+  const startQuiz = () => {
+    setQuizStarted(true);
+    setStartedAt(new Date());
+  };
+
+  const selectAnswer = (questionId: string, optionIndex: number) => {
+    setAnswers((prev) => ({
+      ...prev,
+      [questionId]: optionIndex,
+    }));
+  };
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);

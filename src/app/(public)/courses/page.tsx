@@ -67,7 +67,7 @@ function CoursesContent() {
   );
   
   const [showFilters, setShowFilters] = useState(false);
-  const [user, setUser] = useState<{ name: string; email: string; role: "student" | "instructor" | "admin"; avatar?: string } | null>(null);
+  const [user, setUser] = useState<{ name: string; email: string; role: "student" | "admin"; avatar?: string } | null>(null);
 
   // Get initial values from URL
   useEffect(() => {

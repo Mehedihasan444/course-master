@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { toast } from "sonner";
 import {
   Button,
@@ -75,11 +75,7 @@ export default function AdminAssignmentsPage() {
   const [feedbackInput, setFeedbackInput] = useState("");
   const [isGrading, setIsGrading] = useState(false);
 
-  useEffect(() => {
-    fetchSubmissions();
-  }, [pagination.page, statusFilter]);
-
-  const fetchSubmissions = async () => {
+  const fetchSubmissions = useCallback(async () => {
     try {
       setIsLoading(true);
       const params = new URLSearchParams({
@@ -106,7 +102,11 @@ export default function AdminAssignmentsPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [pagination.page, pagination.limit, statusFilter]);
+
+  useEffect(() => {
+    fetchSubmissions();
+  }, [fetchSubmissions]);
 
   const getAssignmentTitle = (submission: Submission) => {
     const assignment = submission.course.assignments?.find(
