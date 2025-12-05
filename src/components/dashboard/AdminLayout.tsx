@@ -19,6 +19,7 @@ import {
   FileText,
   Bell,
   GraduationCap,
+  HelpCircle,
 } from "lucide-react";
 
 interface AdminLayoutProps {
@@ -55,6 +56,11 @@ const sidebarItems = [
     title: "Assignments",
     href: "/admin/dashboard/assignments",
     icon: FileText,
+  },
+  {
+    title: "Quizzes",
+    href: "/admin/dashboard/quizzes",
+    icon: HelpCircle,
   },
   {
     title: "Transactions",

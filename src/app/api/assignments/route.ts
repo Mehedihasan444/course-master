@@ -9,7 +9,7 @@ import { z } from "zod";
 const submissionSchema = z.object({
   courseId: z.string().min(1, "Course ID is required"),
   assignmentId: z.string().min(1, "Assignment ID is required"),
-  moduleId: z.string().min(1, "Module ID is required"),
+  moduleId: z.string().optional(),
   submissionType: z.enum(["link", "text"]),
   content: z.string().min(1, "Content is required"),
 });
@@ -87,14 +87,27 @@ export async function POST(req: NextRequest) {
     }
 
     // Create new submission
-    const submission = await AssignmentSubmission.create({
+    const submissionData: {
+      student: typeof user._id;
+      course: string;
+      assignmentId: string;
+      moduleId?: string;
+      submissionType: string;
+      content: string;
+    } = {
       student: user._id,
       course: courseId,
       assignmentId,
-      moduleId,
       submissionType,
       content,
-    });
+    };
+
+    // Only include moduleId if it's a valid string
+    if (moduleId && moduleId !== "undefined") {
+      submissionData.moduleId = moduleId;
+    }
+
+    const submission = await AssignmentSubmission.create(submissionData);
 
     return NextResponse.json(
       {

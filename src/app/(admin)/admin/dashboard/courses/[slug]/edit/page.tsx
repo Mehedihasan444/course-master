@@ -42,7 +42,7 @@ interface CourseFormData {
   shortDescription: string;
   thumbnail: string;
   category: string;
-  level: 'beginner' | 'intermediate' | 'advanced';
+  level: 'Beginner' | 'Intermediate' | 'Advanced';
   price: number;
   discountedPrice: number;
   tags: string[];
@@ -416,9 +416,9 @@ export default function EditCoursePage({ params }: { params: Promise<{ slug: str
                   required
                   className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
-                  <option value="beginner">Beginner</option>
-                  <option value="intermediate">Intermediate</option>
-                  <option value="advanced">Advanced</option>
+                  <option value="Beginner">Beginner</option>
+                  <option value="Intermediate">Intermediate</option>
+                  <option value="Advanced">Advanced</option>
                 </select>
               </div>
 

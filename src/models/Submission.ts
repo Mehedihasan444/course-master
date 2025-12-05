@@ -6,7 +6,7 @@ export interface IAssignmentSubmission extends Document {
   student: mongoose.Types.ObjectId;
   course: mongoose.Types.ObjectId;
   assignmentId: mongoose.Types.ObjectId;
-  moduleId: mongoose.Types.ObjectId;
+  moduleId?: mongoose.Types.ObjectId;
   submissionType: "link" | "text";
   content: string; // Google Drive link or text answer
   submittedAt: Date;
@@ -35,7 +35,6 @@ const assignmentSubmissionSchema = new Schema<IAssignmentSubmission>(
     },
     moduleId: {
       type: Schema.Types.ObjectId,
-      required: true,
     },
     submissionType: {
       type: String,
@@ -95,7 +94,7 @@ export interface IQuizAttempt extends Document {
   student: mongoose.Types.ObjectId;
   course: mongoose.Types.ObjectId;
   quizId: mongoose.Types.ObjectId;
-  moduleId: mongoose.Types.ObjectId;
+  moduleId?: mongoose.Types.ObjectId;
   answers: IQuizAnswer[];
   score: number;
   maxScore: number;
@@ -143,7 +142,6 @@ const quizAttemptSchema = new Schema<IQuizAttempt>(
     },
     moduleId: {
       type: Schema.Types.ObjectId,
-      required: true,
     },
     answers: [quizAnswerSchema],
     score: {

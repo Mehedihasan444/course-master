@@ -10,7 +10,7 @@ import { z } from "zod";
 const quizSubmitSchema = z.object({
   courseId: z.string().min(1, "Course ID is required"),
   quizId: z.string().min(1, "Quiz ID is required"),
-  moduleId: z.string().min(1, "Module ID is required"),
+  moduleId: z.string().optional(),
   answers: z.array(
     z.object({
       questionId: z.string(),
@@ -103,12 +103,24 @@ export async function POST(req: NextRequest) {
     const endTime = new Date();
     const timeSpent = Math.round((endTime.getTime() - startTime.getTime()) / 1000);
 
-    // Create quiz attempt
-    const attempt = await QuizAttempt.create({
+    // Create quiz attempt data
+    const attemptData: {
+      student: typeof user._id;
+      course: string;
+      quizId: string;
+      moduleId?: string;
+      answers: typeof gradedAnswers;
+      score: number;
+      maxScore: number;
+      percentage: number;
+      passed: boolean;
+      startedAt: Date;
+      completedAt: Date;
+      timeSpent: number;
+    } = {
       student: user._id,
       course: courseId,
       quizId,
-      moduleId,
       answers: gradedAnswers,
       score,
       maxScore,
@@ -117,7 +129,15 @@ export async function POST(req: NextRequest) {
       startedAt: startTime,
       completedAt: endTime,
       timeSpent,
-    });
+    };
+
+    // Only include moduleId if it's a valid string
+    if (moduleId && moduleId !== "undefined") {
+      attemptData.moduleId = moduleId;
+    }
+
+    // Create quiz attempt
+    const attempt = await QuizAttempt.create(attemptData);
 
     return NextResponse.json({
       success: true,
