@@ -142,8 +142,128 @@ The project includes a custom component library:
 
 - JWT-based authentication with HTTP-only cookies
 - Middleware-protected routes
-- Role-based access control (student, instructor, admin)
+- Role-based access control (student, admin)
 - Session persistence across page refreshes
+
+## 📡 API Documentation
+
+### Authentication Endpoints
+
+| Method | Endpoint | Description | Auth |
+|--------|----------|-------------|------|
+| POST | `/api/auth/register` | Register a new user | No |
+| POST | `/api/auth/login` | Login user | No |
+| POST | `/api/auth/logout` | Logout user | Yes |
+| GET | `/api/auth/me` | Get current user | Yes |
+
+### Course Endpoints
+
+| Method | Endpoint | Description | Auth |
+|--------|----------|-------------|------|
+| GET | `/api/courses` | Get all published courses | No |
+| POST | `/api/courses` | Create a new course | Admin |
+| GET | `/api/courses/[slug]` | Get course by slug | No |
+| PUT | `/api/courses/[slug]` | Update course | Admin |
+| DELETE | `/api/courses/[slug]` | Delete course | Admin |
+
+### Enrollment Endpoints
+
+| Method | Endpoint | Description | Auth |
+|--------|----------|-------------|------|
+| GET | `/api/enrollments` | Get user enrollments | Yes |
+| POST | `/api/enrollments` | Enroll in a course | Yes |
+| PUT | `/api/enrollments/[id]/progress` | Update lesson progress | Yes |
+
+### Assignment Endpoints
+
+| Method | Endpoint | Description | Auth |
+|--------|----------|-------------|------|
+| GET | `/api/assignments` | Get user's assignment submissions | Yes |
+| POST | `/api/assignments` | Submit an assignment | Yes |
+
+### Quiz Endpoints
+
+| Method | Endpoint | Description | Auth |
+|--------|----------|-------------|------|
+| GET | `/api/quizzes` | Get user's quiz attempts | Yes |
+| POST | `/api/quizzes` | Submit a quiz attempt | Yes |
+
+### Admin Endpoints
+
+| Method | Endpoint | Description | Auth |
+|--------|----------|-------------|------|
+| GET | `/api/admin/analytics` | Get platform analytics | Admin |
+| GET | `/api/admin/users` | Get all users (paginated) | Admin |
+| GET | `/api/admin/users/[id]` | Get user by ID | Admin |
+| PUT | `/api/admin/users/[id]` | Update user (role) | Admin |
+| DELETE | `/api/admin/users/[id]` | Delete user | Admin |
+| GET | `/api/admin/enrollments` | Get all enrollments | Admin |
+| GET | `/api/admin/assignments` | Get all assignment submissions | Admin |
+| PUT | `/api/admin/assignments/[id]` | Grade assignment | Admin |
+| GET | `/api/admin/quizzes` | Get all quiz attempts | Admin |
+
+### Request/Response Examples
+
+#### Register User
+```bash
+POST /api/auth/register
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "password": "Password123"
+}
+```
+
+#### Login
+```bash
+POST /api/auth/login
+Content-Type: application/json
+
+{
+  "email": "john@example.com",
+  "password": "Password123"
+}
+```
+
+#### Enroll in Course
+```bash
+POST /api/enrollments
+Content-Type: application/json
+
+{
+  "courseId": "course_id_here"
+}
+```
+
+#### Submit Assignment
+```bash
+POST /api/assignments
+Content-Type: application/json
+
+{
+  "lessonId": "lesson_id",
+  "courseId": "course_id",
+  "content": "Assignment submission content",
+  "attachments": ["url1", "url2"]
+}
+```
+
+#### Submit Quiz
+```bash
+POST /api/quizzes
+Content-Type: application/json
+
+{
+  "lessonId": "lesson_id",
+  "courseId": "course_id",
+  "answers": [
+    { "questionId": "q1", "selectedOption": 0 },
+    { "questionId": "q2", "selectedOption": 2 }
+  ]
+}
+```
 
 ## 📱 Responsive Design
 
