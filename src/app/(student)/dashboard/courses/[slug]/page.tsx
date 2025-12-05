@@ -18,10 +18,11 @@ import {
   Clock,
   CheckCircle,
   Play,
-  Lock,
   ChevronRight,
   Award,
   ArrowLeft,
+  FileText,
+  HelpCircle,
 } from "lucide-react";
 
 async function getCourseWithProgress(slug: string, userId: string) {
@@ -310,6 +311,103 @@ export default async function CoursePlayerPage({
                 </Card>
               );
             }
+          )}
+
+          {/* Assignments Section */}
+          {course.assignments && course.assignments.length > 0 && (
+            <div className="mt-8">
+              <h2 className="text-xl font-semibold text-surface-900 mb-4 flex items-center gap-2">
+                <FileText className="w-5 h-5 text-primary-600" />
+                Assignments ({course.assignments.length})
+              </h2>
+              <Card>
+                <CardContent className="py-4">
+                  <ul className="divide-y divide-surface-100">
+                    {course.assignments.map((assignment: {
+                      _id: string;
+                      title: string;
+                      description: string;
+                      moduleId: string;
+                      maxScore: number;
+                    }) => {
+                      const module = course.modules.find(
+                        (m: { _id: string }) => m._id === assignment.moduleId
+                      );
+                      return (
+                        <li key={assignment._id}>
+                          <Link
+                            href={`/dashboard/courses/${slug}/assignment?assignmentId=${assignment._id}&moduleId=${assignment.moduleId}`}
+                            className="flex items-center gap-3 py-3 hover:bg-surface-50 -mx-4 px-4 transition-colors"
+                          >
+                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-orange-100 text-orange-600">
+                              <FileText className="w-5 h-5" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="font-medium text-surface-900 truncate">
+                                {assignment.title}
+                              </p>
+                              <p className="text-xs text-surface-500">
+                                {module?.title || "General"} • Max Score: {assignment.maxScore}
+                              </p>
+                            </div>
+                            <ChevronRight className="w-4 h-4 text-surface-300" />
+                          </Link>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
+          {/* Quizzes Section */}
+          {course.quizzes && course.quizzes.length > 0 && (
+            <div className="mt-8">
+              <h2 className="text-xl font-semibold text-surface-900 mb-4 flex items-center gap-2">
+                <HelpCircle className="w-5 h-5 text-primary-600" />
+                Quizzes ({course.quizzes.length})
+              </h2>
+              <Card>
+                <CardContent className="py-4">
+                  <ul className="divide-y divide-surface-100">
+                    {course.quizzes.map((quiz: {
+                      _id: string;
+                      title: string;
+                      moduleId: string;
+                      questions: Array<unknown>;
+                      passingScore: number;
+                      timeLimit: number;
+                    }) => {
+                      const module = course.modules.find(
+                        (m: { _id: string }) => m._id === quiz.moduleId
+                      );
+                      return (
+                        <li key={quiz._id}>
+                          <Link
+                            href={`/dashboard/courses/${slug}/quiz?quizId=${quiz._id}&moduleId=${quiz.moduleId}`}
+                            className="flex items-center gap-3 py-3 hover:bg-surface-50 -mx-4 px-4 transition-colors"
+                          >
+                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-purple-100 text-purple-600">
+                              <HelpCircle className="w-5 h-5" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="font-medium text-surface-900 truncate">
+                                {quiz.title}
+                              </p>
+                              <p className="text-xs text-surface-500">
+                                {module?.title || "General"} • {quiz.questions?.length || 0} questions • {quiz.timeLimit} min
+                              </p>
+                            </div>
+                            <ChevronRight className="w-4 h-4 text-surface-300" />
+                          </Link>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </CardContent>
+              </Card>
+            </div>
           )}
         </div>
 

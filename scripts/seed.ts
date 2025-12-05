@@ -168,6 +168,70 @@ async function seed() {
             ],
           },
         ],
+        assignments: [
+          {
+            title: "Build a Personal Portfolio Page",
+            description: "Create a responsive personal portfolio page using HTML and CSS. Include sections for About, Projects, and Contact. Make sure it looks good on both desktop and mobile devices.",
+            maxScore: 100,
+          },
+          {
+            title: "JavaScript Todo App",
+            description: "Build a functional todo list application using vanilla JavaScript. Implement features like adding, deleting, and marking todos as complete. Store data in localStorage.",
+            maxScore: 100,
+          },
+        ],
+        quizzes: [
+          {
+            title: "HTML & CSS Fundamentals Quiz",
+            questions: [
+              {
+                question: "What does HTML stand for?",
+                options: ["Hyper Text Markup Language", "High Tech Modern Language", "Hyper Transfer Markup Language", "Home Tool Markup Language"],
+                correctAnswer: 0,
+                points: 10,
+              },
+              {
+                question: "Which CSS property is used to change the text color?",
+                options: ["font-color", "text-color", "color", "foreground-color"],
+                correctAnswer: 2,
+                points: 10,
+              },
+              {
+                question: "What is the correct way to select an element with id 'header' in CSS?",
+                options: [".header", "#header", "header", "*header"],
+                correctAnswer: 1,
+                points: 10,
+              },
+            ],
+            passingScore: 70,
+            timeLimit: 10,
+          },
+          {
+            title: "JavaScript Basics Quiz",
+            questions: [
+              {
+                question: "Which keyword is used to declare a variable in JavaScript?",
+                options: ["var", "let", "const", "All of the above"],
+                correctAnswer: 3,
+                points: 10,
+              },
+              {
+                question: "What is the output of: typeof null?",
+                options: ["null", "undefined", "object", "number"],
+                correctAnswer: 2,
+                points: 10,
+              },
+              {
+                question: "Which method adds an element to the end of an array?",
+                options: ["push()", "pop()", "shift()", "unshift()"],
+                correctAnswer: 0,
+                points: 10,
+              },
+            ],
+            passingScore: 70,
+            timeLimit: 10,
+          },
+        ],
         isPublished: true,
         isFeatured: true,
       },
@@ -292,6 +356,39 @@ async function seed() {
                 isFree: false,
               },
             ],
+          },
+        ],
+        assignments: [
+          {
+            title: "Data Analysis with Pandas",
+            description: "Analyze a provided CSV dataset using Pandas. Calculate statistics, handle missing values, and create visualizations. Submit your Jupyter notebook or Python script.",
+            maxScore: 100,
+          },
+          {
+            title: "Build a Simple ML Model",
+            description: "Train a classification model on the Iris dataset using scikit-learn. Evaluate its performance and explain your approach.",
+            maxScore: 100,
+          },
+        ],
+        quizzes: [
+          {
+            title: "Python Fundamentals Quiz",
+            questions: [
+              {
+                question: "What is the output of: print(type([]))?",
+                options: ["<class 'array'>", "<class 'list'>", "<class 'tuple'>", "<class 'set'>"],
+                correctAnswer: 1,
+                points: 10,
+              },
+              {
+                question: "Which method is used to add an item to a list?",
+                options: ["add()", "append()", "insert()", "push()"],
+                correctAnswer: 1,
+                points: 10,
+              },
+            ],
+            passingScore: 70,
+            timeLimit: 10,
           },
         ],
         isPublished: true,

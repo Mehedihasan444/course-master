@@ -39,7 +39,7 @@ export interface IQuizQuestion {
 export interface IQuiz {
   _id: mongoose.Types.ObjectId;
   title: string;
-  moduleId: mongoose.Types.ObjectId;
+  moduleId?: mongoose.Types.ObjectId;
   questions: IQuizQuestion[];
   passingScore: number;
   timeLimit: number; // in minutes
@@ -49,7 +49,7 @@ export interface IAssignment {
   _id: mongoose.Types.ObjectId;
   title: string;
   description: string;
-  moduleId: mongoose.Types.ObjectId;
+  moduleId?: mongoose.Types.ObjectId;
   dueDate?: Date;
   maxScore: number;
 }
@@ -118,7 +118,7 @@ const quizQuestionSchema = new Schema<IQuizQuestion>({
 
 const quizSchema = new Schema<IQuiz>({
   title: { type: String, required: true },
-  moduleId: { type: Schema.Types.ObjectId, required: true },
+  moduleId: { type: Schema.Types.ObjectId },
   questions: [quizQuestionSchema],
   passingScore: { type: Number, default: 60 },
   timeLimit: { type: Number, default: 30 },
@@ -127,7 +127,7 @@ const quizSchema = new Schema<IQuiz>({
 const assignmentSchema = new Schema<IAssignment>({
   title: { type: String, required: true },
   description: { type: String, required: true },
-  moduleId: { type: Schema.Types.ObjectId, required: true },
+  moduleId: { type: Schema.Types.ObjectId },
   dueDate: { type: Date },
   maxScore: { type: Number, default: 100 },
 });
