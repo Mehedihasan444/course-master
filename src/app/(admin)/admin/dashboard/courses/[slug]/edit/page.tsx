@@ -98,13 +98,13 @@ export default function EditCoursePage({ params }: { params: Promise<{ slug: str
           shortDescription: data.course.shortDescription || '',
           thumbnail: data.course.thumbnail || '',
           category: data.course.category || '',
-          level: data.course.level || 'beginner',
+          level: data.course.level || 'Beginner',
           price: data.course.price || 0,
-          discountedPrice: data.course.discountedPrice || 0,
+          discountedPrice: data.course.discountPrice || 0,
           tags: data.course.tags || [],
           modules: data.course.modules || [],
           batches: formattedBatches,
-          status: data.course.status || 'draft',
+          status: data.course.isPublished ? 'published' : 'draft',
         });
       } catch (error) {
         toast.error(error instanceof Error ? error.message : 'Failed to load course');
@@ -251,10 +251,18 @@ export default function EditCoursePage({ params }: { params: Promise<{ slug: str
     setIsSubmitting(true);
 
     try {
+      // Convert status to isPublished for the backend
+      const { status, discountedPrice, ...rest } = formData;
+      const courseData = {
+        ...rest,
+        discountPrice: discountedPrice,
+        isPublished: status === 'published',
+      };
+
       const response = await fetch(`/api/courses/${resolvedParams.slug}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(courseData),
       });
 
       const data = await response.json();

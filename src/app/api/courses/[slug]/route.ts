@@ -16,7 +16,17 @@ export async function GET(req: NextRequest, { params }: Params) {
     
     const { slug } = await params;
     
-    const course = await Course.findOne({ slug, isPublished: true })
+    // Check if user is admin - admins can see all courses including drafts
+    const user = await getCurrentUser();
+    const isAdmin = user?.role === "admin";
+    
+    // Build query - admins can see unpublished courses
+    const query: Record<string, unknown> = { slug };
+    if (!isAdmin) {
+      query.isPublished = true;
+    }
+    
+    const course = await Course.findOne(query)
       .populate("instructor", "name email avatar bio")
       .lean();
     

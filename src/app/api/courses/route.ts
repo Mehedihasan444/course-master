@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
     // Parse and validate query params
     const queryResult = courseQuerySchema.safeParse({
       page: searchParams.get("page") || "1",
-      limit: searchParams.get("limit") || "12",
+      limit: searchParams.get("limit") || "10",
       search: searchParams.get("search") || "",
       category: searchParams.get("category") || "",
       level: searchParams.get("level") || "",
@@ -94,7 +94,7 @@ export async function GET(req: NextRequest) {
     // Create cache key from query params
     const cacheKey = cacheKeys.courseList({
       page: page || "1",
-      limit: limit || "12",
+      limit: limit || "10",
       search: search || "",
       category: category || "",
       level: level || "",

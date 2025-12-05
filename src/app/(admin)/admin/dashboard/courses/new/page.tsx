@@ -218,10 +218,19 @@ export default function CreateCoursePage() {
     setIsSubmitting(true);
 
     try {
+      // Convert status to isPublished for the backend
+      const { status, discountedPrice, ...rest } = formData;
+      const courseData = {
+        ...rest,
+        discountPrice: discountedPrice,
+        isPublished: status === 'published',
+        isFeatured: false,
+      };
+
       const response = await fetch('/api/courses', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(courseData),
       });
 
       const data = await response.json();

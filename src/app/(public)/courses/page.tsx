@@ -173,21 +173,21 @@ function CoursesContent() {
             </div>
 
             {/* Search Bar */}
-            <form onSubmit={handleSearch} className="mt-8 max-w-2xl mx-auto">
-              <div className="flex gap-2">
-                <div className="flex-1 relative">
-                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-surface-400" />
+            <form onSubmit={handleSearch} className="mt-8 max-w-3xl mx-auto">
+              <div className="flex gap-3">
+                <div className="flex-1 relative group">
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-primary-600 group-focus-within:text-primary-700 transition-colors" />
                   <input
                     type="text"
                     placeholder="Search courses by title, instructor, or topic..."
-                    className="w-full h-12 pl-12 pr-4 rounded-xl border-0 shadow-lg focus:ring-2 focus:ring-primary-300 text-surface-900"
+                    className="w-full h-14 pl-12 pr-4 rounded-xl bg-white border-2 border-white/80 shadow-xl focus:border-primary-400 focus:ring-4 focus:ring-primary-300/50 text-surface-900 placeholder:text-surface-500 text-base transition-all duration-200"
                     value={filters.search}
                     onChange={(e) =>
                       dispatch(setFilters({ search: e.target.value }))
                     }
                   />
                 </div>
-                <Button type="submit" size="lg" className="shrink-0">
+                <Button type="submit" size="lg" className="shrink-0 h-14 px-8 text-base font-semibold shadow-xl hover:shadow-2xl transition-shadow">
                   Search
                 </Button>
               </div>
@@ -383,7 +383,7 @@ function CoursesContent() {
                                 className="w-full h-full object-cover"
                               />
                             ) : (
-                              <div className="w-full h-full bg-gradient-to-br from-primary-100 to-primary-200 flex items-center justify-center">
+                              <div className="w-full h-full bg-linear-to-br from-primary-100 to-primary-200 flex items-center justify-center">
                                 <BookOpen className="w-12 h-12 text-primary-400" />
                               </div>
                             )}
