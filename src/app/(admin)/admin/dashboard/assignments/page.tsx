@@ -109,7 +109,7 @@ export default function AdminAssignmentsPage() {
   }, [fetchSubmissions]);
 
   const getAssignmentTitle = (submission: Submission) => {
-    const assignment = submission.course.assignments?.find(
+    const assignment = submission.course?.assignments?.find(
       (a) => a._id === submission.assignmentId
     );
     return assignment?.title || "Unknown Assignment";
@@ -289,13 +289,13 @@ export default function AdminAssignmentsPage() {
                           <User className="w-5 h-5 text-primary-600" />
                         </div>
                         <div>
-                          <p className="font-medium text-surface-900">{submission.student.name}</p>
-                          <p className="text-sm text-surface-500">{submission.student.email}</p>
+                          <p className="font-medium text-surface-900">{submission.student?.name}</p>
+                          <p className="text-sm text-surface-500">{submission.student?.email}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-2 text-sm text-surface-600 mb-2">
                         <BookOpen className="w-4 h-4" />
-                        <span>{submission.course.title}</span>
+                        <span>{submission.course?.title}</span>
                         <span className="text-surface-400">•</span>
                         <span>{getAssignmentTitle(submission)}</span>
                       </div>

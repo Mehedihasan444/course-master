@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
     });
     
     // Send welcome email (async, don't block registration)
-    sendWelcomeEmail(user.name, user.email).catch((err) => {
+    sendWelcomeEmail(user.email, user.name).catch((err) => {
       console.error("Failed to send welcome email:", err);
     });
     

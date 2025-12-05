@@ -62,26 +62,26 @@ const sidebarItems = [
     href: "/admin/dashboard/quizzes",
     icon: HelpCircle,
   },
-  {
-    title: "Transactions",
-    href: "/admin/dashboard/transactions",
-    icon: DollarSign,
-  },
+  // {
+  //   title: "Transactions",
+  //   href: "/admin/dashboard/transactions",
+  //   icon: DollarSign,
+  // },
   {
     title: "Analytics",
     href: "/admin/dashboard/analytics",
     icon: BarChart3,
   },
-  {
-    title: "Reports",
-    href: "/admin/dashboard/reports",
-    icon: FileText,
-  },
-  {
-    title: "Settings",
-    href: "/admin/dashboard/settings",
-    icon: Settings,
-  },
+  // {
+  //   title: "Reports",
+  //   href: "/admin/dashboard/reports",
+  //   icon: FileText,
+  // },
+  // {
+  //   title: "Settings",
+  //   href: "/admin/dashboard/settings",
+  //   icon: Settings,
+  // },
 ];
 
 export function AdminLayout({ children, user }: AdminLayoutProps) {
@@ -107,8 +107,8 @@ export function AdminLayout({ children, user }: AdminLayoutProps) {
       >
         {/* Logo */}
         <div className="flex items-center justify-between h-16 px-6 border-b border-surface-700">
-          <Link href="/admin" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-accent-500 rounded-lg flex items-center justify-center">
+          <Link href="/admin/dashboard" className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-linear-to-br from-primary-500 to-accent-500 rounded-lg flex items-center justify-center">
               <Shield className="w-5 h-5 text-white" />
             </div>
             <span className="font-bold text-xl text-white">Admin</span>

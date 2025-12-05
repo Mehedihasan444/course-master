@@ -10,7 +10,6 @@ import {
   LayoutDashboard,
   GraduationCap,
   ClipboardList,
-  Award,
   Settings,
   LogOut,
   Menu,
@@ -46,16 +45,16 @@ const sidebarLinks = [
     label: "Assignments",
     href: "/dashboard/assignments",
   },
-  {
-    icon: Award,
-    label: "Certificates",
-    href: "/dashboard/certificates",
-  },
-  {
-    icon: Settings,
-    label: "Settings",
-    href: "/dashboard/settings",
-  },
+  // {
+  //   icon: Award,
+  //   label: "Certificates",
+  //   href: "/dashboard/certificates",
+  // },
+  // {
+  //   icon: Settings,
+  //   label: "Settings",
+  //   href: "/dashboard/settings",
+  // },
 ];
 
 export function DashboardLayout({ children, user }: DashboardLayoutProps) {
