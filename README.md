@@ -1,6 +1,6 @@
 # CourseMaster - Modern EdTech Platform
 
-A full-stack educational technology platform built with Next.js 16, TypeScript, MongoDB, and Tailwind CSS. Features a professional UI/UX with support for students, instructors, and administrators.
+A full-stack educational technology platform built with Next.js 16, TypeScript, MongoDB, and Tailwind CSS. Features a professional UI/UX with support for students and administrators.
 
 ![CourseMaster](https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1200&h=600&fit=crop)
 
@@ -11,18 +11,17 @@ A full-stack educational technology platform built with Next.js 16, TypeScript, 
 - 🎓 Enroll in courses and track progress
 - 📊 Personal dashboard with learning analytics
 - 🎬 Interactive lesson player with video, articles, and quizzes
+- 📝 Submit assignments and take quizzes
 - 🏆 Progress tracking and completion certificates
-
-### For Instructors
-- 📝 Create and manage courses with modules and lessons
-- 👥 Track student enrollments and engagement
-- 📈 View analytics and earnings
-- ⭐ Manage course reviews
+- 📧 Welcome email upon registration
 
 ### For Administrators
 - 🛡️ Full platform oversight and management
-- 👤 User management (students, instructors)
+- 👤 User management (view, edit roles, delete users)
 - 📊 Platform-wide analytics
+- 📝 Review assignment submissions
+- ✅ Review quiz attempts and scores
+- 📚 Course management (create, edit, publish, delete)
 - 💰 Revenue tracking
 
 ## 🛠️ Tech Stack
@@ -35,6 +34,7 @@ A full-stack educational technology platform built with Next.js 16, TypeScript, 
 - **Styling:** Tailwind CSS 4
 - **UI Components:** Custom component library with CVA
 - **Form Handling:** React Hook Form + Zod validation
+- **Email:** Nodemailer (Gmail SMTP)
 - **Animations:** Framer Motion
 - **Icons:** Lucide React
 - **Notifications:** Sonner
@@ -62,10 +62,25 @@ npm install
 
 3. Create a `.env.local` file in the root directory:
 ```env
+# MongoDB Connection
 MONGODB_URI=your_mongodb_connection_string
+
+# JWT Configuration
 JWT_SECRET=your_jwt_secret_key
-NEXT_PUBLIC_APP_URL=http://localhost:3000
-ADMIN_SECRET_KEY=your_admin_secret
+
+# Admin Registration Key
+ADMIN_REGISTRATION_KEY=your_admin_secret_key
+
+# Next.js
+NEXT_PUBLIC_API_URL=http://localhost:3000/api
+
+# Email Configuration (Nodemailer - Gmail)
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=your_gmail_address
+SMTP_PASS=your_gmail_app_password
+SMTP_FROM=your_gmail_address
 ```
 
 4. Seed the database with sample data:
@@ -86,8 +101,9 @@ After seeding, you can log in with these accounts:
 
 | Role | Email | Password |
 |------|-------|----------|
-| Admin | admin@coursemaster.com | password123 |
-| Instructor | instructor@coursemaster.com | password123 |
+| Admin | admin@coursemaster.com | Password123 |
+| Student | mike@example.com | Password123 |
+| Student | emily@example.com | Password123 |
 
 ## 📁 Project Structure
 
@@ -97,12 +113,12 @@ src/
 │   ├── (public)/          # Public pages (home, courses)
 │   ├── (auth)/            # Authentication pages
 │   ├── (student)/         # Student dashboard
-│   ├── (instructor)/      # Instructor dashboard
 │   ├── (admin)/           # Admin dashboard
 │   └── api/               # API routes
 ├── components/
 │   ├── ui/                # Reusable UI components
 │   ├── layout/            # Layout components
+│   ├── admin/             # Admin components
 │   └── dashboard/         # Dashboard components
 ├── lib/                   # Utilities and configurations
 ├── models/                # Mongoose models
@@ -143,10 +159,10 @@ The platform is fully responsive with:
 - [ ] Video hosting integration
 - [ ] Live classes with WebRTC
 - [ ] Discussion forums
-- [ ] Email notifications
 - [ ] Advanced analytics
 - [ ] Course recommendations
 - [ ] Mobile app (React Native)
+- [ ] Instructor role with course creation
 
 ## 📄 License
 
